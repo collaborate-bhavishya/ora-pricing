@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pricing — ORA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          canvas: '#0a0a0a',
+          brand: {
+            DEFAULT: '#6366f1',
+            50: '#eef2ff',
+            400: '#818cf8',
+            500: '#6366f1',
+            600: '#4f46e5',
+          },
+          'surface-border': '#262626',
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background-color: #0a0a0a; scroll-behavior: smooth; }
+  body { background: transparent; }
+
+  /* ===== Apple-style liquid glass ===== */
+  .glass {
+    background: rgba(255,255,255,0.045);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    border: 1px solid rgba(255,255,255,0.09);
+    box-shadow: 0 10px 34px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .glass-soft {
+    background: rgba(255,255,255,0.03);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  /* glossy top highlight */
+  .glass-sheen::before {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 40%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.07), rgba(255,255,255,0));
+    pointer-events: none; border-radius: inherit;
+  }
+  .lift { transition: transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s cubic-bezier(.22,1,.36,1), border-color .45s; }
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 55px rgba(0,0,0,0.55), 0 0 0 1px rgba(99,102,241,0.25), inset 0 1px 0 rgba(255,255,255,0.14);
+    border-color: rgba(99,102,241,0.40);
+  }
+
+  /* sticky frosted nav */
+  .glass-nav {
+    background: rgba(10,10,10,0.55);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  /* ambient animated aura */
+  .bg-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .orb { position: absolute; border-radius: 9999px; filter: blur(90px); }
+  .orb-1 { width: 500px; height: 500px; top: -140px; left: -100px;
+    background: radial-gradient(circle, rgba(99,102,241,0.38), transparent 70%); animation: float1 20s ease-in-out infinite; }
+  .orb-2 { width: 560px; height: 560px; top: 12%; right: -180px;
+    background: radial-gradient(circle, rgba(79,70,229,0.30), transparent 70%); animation: float2 24s ease-in-out infinite; }
+  .orb-3 { width: 460px; height: 460px; bottom: -160px; left: 38%;
+    background: radial-gradient(circle, rgba(129,140,248,0.22), transparent 70%); animation: float3 28s ease-in-out infinite; }
+  @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(50px,70px)} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,50px)} }
+  @keyframes float3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-60px)} }
+
+  /* entrance reveal */
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  .reveal { animation: rise .65s cubic-bezier(.22,1,.36,1) both; }
+  .reveal-1 { animation-delay: .05s; }
+  .reveal-2 { animation-delay: .16s; }
+  .reveal-3 { animation-delay: .27s; }
+
+  /* sheen sweep on primary buttons */
+  .btn-sheen { position: relative; overflow: hidden; }
+  .btn-sheen::after {
+    content: ''; position: absolute; top: 0; left: -80%; width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-20deg); transition: left .6s ease;
+  }
+  .btn-sheen:hover::after { left: 130%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .orb, .reveal, .fade-up, .fade-in { animation: none !important; }
+    .lift { transition: none; }
+    .btn-sheen::after { display: none; }
+  }
+
+  input[type="range"].ora-slider {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; border-radius: 9999px;
+    outline: none; background: #262626;
+  }
+  input[type="range"].ora-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 9999px;
+    background: #fff; border: 3px solid #6366f1;
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+    cursor: pointer; margin-top: -6px; transition: transform 0.15s ease;
+  }
+  input[type="range"].ora-slider:active::-webkit-slider-thumb { transform: scale(0.92); }
+  input[type="range"].ora-slider::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 9999px;
+    background: #fff; border: 3px solid #6366f1;
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.15); cursor: pointer;
+  }
+  input[type="range"].ora-slider::-webkit-slider-runnable-track { height: 6px; border-radius: 9999px; }
+  input[type="range"].ora-slider::-moz-range-track { height: 6px; border-radius: 9999px; background: transparent; }
+
+  .milestone-dot { transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; }
+  .milestone-dot:hover { transform: translate(-50%, -50%) scale(1.15); }
+
+  .ora-check {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 6px;
+    border: 1.5px solid #3f3f46; background: #171717;
+    cursor: pointer; position: relative; transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .ora-check:hover { border-color: #52525b; }
+  .ora-check:checked { background: #6366f1; border-color: #6366f1; }
+  .ora-check:checked::after {
+    content: ''; position: absolute; left: 5.5px; top: 2px;
+    width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .ora-check:active { transform: scale(0.92); }
+
+  /* gradient credit figure — gold → rose → violet → blue */
+  .credit-gradient {
+    background: linear-gradient(120deg, #f5d38a, #f19ab0, #c79bf0, #8fb8f0);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-up { animation: fadeUp 0.4s ease both; }
+  .fade-up-1 { animation-delay: 0.05s; }
+  .fade-up-2 { animation-delay: 0.12s; }
+  .fade-up-3 { animation-delay: 0.19s; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.35s ease both; }
+  summary { list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  .gradient-text-best {
+    background: linear-gradient(135deg, #f5d38a 0%, #f19ab0 33%, #c79bf0 66%, #8fb8f0 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+</style>
+</head>
+<body class="text-gray-100 antialiased min-h-screen">
+
+  <!-- ambient liquid-glass aura -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Top Logo Bar -->
+  <header class="relative z-20 max-w-6xl mx-auto px-6 pt-6 sm:pt-8 flex items-center justify-between">
+    <a href="#" class="inline-flex items-center gap-2 group">
+      <img src="logo.png" alt="ORALAB" class="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]" />
+    </a>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative z-10 max-w-5xl mx-auto px-6 pt-6 sm:pt-8 pb-6 text-center reveal reveal-1">
+    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Build your plan</h1>
+  </section>
+
+  <main class="relative z-10 max-w-5xl mx-auto px-6 pb-24">
+
+    <!-- top bar: title + currency -->
+    <div class="flex items-end justify-between mb-4 gap-4 reveal reveal-2">
+      <div>
+        <h2 class="text-base font-bold text-gray-100 leading-tight">Select your <span class="text-brand-400">monthly</span> requirement</h2>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="text-xs text-gray-500 hidden sm:inline">Prices in</span>
+        <div id="currency-toggle" class="flex rounded-lg border border-surface-border overflow-hidden text-xs">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Two clearly separated sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 reveal reveal-3">
+
+      <!-- ===== IMAGES ===== -->
+      <section class="glass glass-sheen relative rounded-2xl p-5 sm:p-6 overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-brand/60 via-brand/20 to-transparent"></div>
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+              <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+              <circle cx="8.5" cy="8.5" r="1.6"/>
+              <path d="M21 15l-4.5-4.5L5.5 21.5"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-gray-100 leading-tight">Images</h3>
+            <p class="text-xs text-gray-500">Still image generation</p>
+          </div>
+          <span class="ml-auto text-[10px] font-semibold uppercase tracking-wide text-brand-400 bg-brand/10 border border-brand/20 rounded-full px-2 py-0.5 shrink-0">Monthly</span>
+        </div>
+
+        <div class="space-y-6">
+          <div>
+            <div class="text-xs font-medium text-gray-400 mb-2">Image type</div>
+            <div id="image-type" class="grid grid-cols-3 gap-2"></div>
+          </div>
+
+          <div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <div class="text-xs font-medium text-gray-400">Images / month</div>
+              <span class="text-lg font-extrabold tabular-nums text-gray-100" id="images-value">0</span>
+            </div>
+            <div class="relative pt-2 pb-10">
+              <div class="relative" id="images-sliderrow">
+                <input type="range" id="images-slider" class="ora-slider" min="0" max="500" step="10" value="0" />
+                <div class="absolute inset-0 pointer-events-none" id="images-milestones"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- managed service, then credits (last, emphasised) -->
+          <div class="pt-4 border-t border-neutral-800 space-y-4">
+            <label class="flex items-center gap-2.5 cursor-pointer select-none">
+              <input type="checkbox" id="img-managed" class="ora-check" />
+              <span class="text-xs text-gray-300">ORA Design Studio Services <span class="text-gray-500">(+$2 / image)</span></span>
+            </label>
+            <div class="pt-2">
+              <div class="text-sm font-medium text-gray-400">Credits needed / month</div>
+              <div class="text-3xl font-extrabold tabular-nums credit-gradient mt-1.5" id="images-credits">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIDEO ===== -->
+      <section class="glass glass-sheen relative rounded-2xl p-5 sm:p-6 overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-brand/60 via-brand/20 to-transparent"></div>
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+              <rect x="2.5" y="5" width="15" height="14" rx="2.5"/>
+              <path d="M17.5 10l4-2.2v8.4l-4-2.2z"/>
+              <path d="M7 12h4M9 10v4" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-gray-100 leading-tight">Video</h3>
+            <p class="text-xs text-gray-500">Motion / video generation</p>
+          </div>
+          <span class="ml-auto text-[10px] font-semibold uppercase tracking-wide text-brand-400 bg-brand/10 border border-brand/20 rounded-full px-2 py-0.5 shrink-0">Monthly</span>
+        </div>
+
+        <div class="space-y-6">
+          <div>
+            <div class="text-xs font-medium text-gray-400 mb-2">Video type</div>
+            <div id="video-type" class="grid grid-cols-3 gap-2"></div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-xs font-medium text-gray-400">Duration</div>
+              <span class="text-xs text-gray-600" id="clip-hint">per clip</span>
+            </div>
+            <div id="clip-length" class="grid grid-cols-4 gap-2"></div>
+          </div>
+
+          <div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <div class="text-xs font-medium text-gray-400">Videos / month</div>
+              <span class="text-lg font-extrabold tabular-nums text-gray-100" id="videos-value">0</span>
+            </div>
+            <div class="relative pt-2 pb-10">
+              <div class="relative" id="videos-sliderrow">
+                <input type="range" id="videos-slider" class="ora-slider" min="0" max="50" step="5" value="0" />
+                <div class="absolute inset-0 pointer-events-none" id="videos-milestones"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- managed service, then credits (last, emphasised) -->
+          <div class="pt-4 border-t border-neutral-800 space-y-4">
+            <label class="flex items-center gap-2.5 cursor-pointer select-none">
+              <input type="checkbox" id="vid-managed" class="ora-check" />
+              <span class="text-xs text-gray-300">ORA Design Studio Services <span class="text-gray-500">(+$4 / video)</span></span>
+            </label>
+            <div class="pt-2">
+              <div class="text-sm font-medium text-gray-400">Credits needed / month</div>
+              <div class="text-3xl font-extrabold tabular-nums credit-gradient mt-1.5" id="videos-credits">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Live plans -->
+    <section id="plans-section" class="mt-12">
+      <div class="text-center mb-6">
+        <h3 class="text-lg font-bold text-gray-100">Choose your billing term</h3>
+      </div>
+      <div id="plans-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"></div>
+
+      <!-- Feature Comparison Accordion -->
+      <div class="mt-8">
+        <details class="group glass glass-sheen rounded-2xl overflow-hidden transition-all duration-300 border border-surface-border" open>
+          <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer select-none bg-neutral-900/40 hover:bg-neutral-800/40 transition-colors">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+              </div>
+              <div class="text-left">
+                <h3 class="text-base font-bold text-gray-100 leading-tight">Feature comparison</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Compare capabilities, queue priority, and support across billing terms</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 text-xs font-semibold text-gray-400 group-hover:text-gray-200 transition-colors">
+              <span class="group-open:hidden">Show comparison</span>
+              <span class="hidden group-open:inline">Hide comparison</span>
+              <div class="w-7 h-7 rounded-lg bg-neutral-800/60 border border-neutral-700/50 flex items-center justify-center text-gray-400 group-open:rotate-180 transition-transform duration-300">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </summary>
+          
+          <div class="p-5 sm:p-6 pt-0 border-t border-white/10 overflow-x-auto">
+            <table class="w-full text-left text-xs min-w-[620px] mt-4">
+              <thead>
+                <tr class="border-b border-white/10 text-gray-400">
+                  <th class="pb-3.5 font-semibold w-1/3 text-gray-300">Capabilities &amp; Support</th>
+                  <th class="pb-3.5 font-semibold text-center w-2/9">Monthly</th>
+                  <th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">Quarterly</th>
+                  <th class="pb-3.5 font-semibold text-center w-2/9 text-white">Yearly <span class="inline-block bg-black border border-neutral-700 px-2.5 py-0.5 rounded-full ml-1.5 shadow-md align-middle"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5">
+                <!-- Section 1: Core AI Capabilities & Generation -->
+                <tr class="bg-neutral-900/50">
+                  <td colspan="4" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">Core AI Capabilities &amp; Generation</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Image Generation</td>
+                  <td class="py-3 px-3 text-center text-gray-300">Yes</td>
+                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Yes</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Video Generation</td>
+                  <td class="py-3 px-3 text-center text-gray-300">Yes</td>
+                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Yes</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Advance ORA AI Models</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Yes</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">AI Assistance (ORA Bot)</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Yes</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Notebook / Workflow</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">AI Notebook Flow</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Usage Limits</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Lower Credits</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Medium Credits</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Highest Credits</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Priority GPU Queue</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Standard</td>
+                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Faster</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Highest Priority</td>
+                </tr>
+
+                <!-- Section 2: Brand & Creative Editing -->
+                <tr class="bg-neutral-900/50">
+                  <td colspan="4" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">Brand &amp; Creative Editing</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Creative Collection</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Limited</td>
+                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Full</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Full</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Brand Identity</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Brand Kit</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Advanced Brand Identity + Guidelines</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Brand Templates</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
+                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Premium</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Custom Brand Templates</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">AI Prompt Assistant</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Custom Prompt Library</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Product Preservation</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Advanced</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Targeted Editing</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Advanced</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Background Generation</td>
+                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Advanced</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Bulk Generation</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Limited</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Unlimited</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Batch Editing</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Limited</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Unlimited</td>
+                </tr>
+
+                <!-- Section 3: Team & Enterprise Support -->
+                <tr class="bg-neutral-900/50">
+                  <td colspan="4" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">Team &amp; Enterprise Support</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Team Members</td>
+                  <td class="py-3 px-3 text-center text-gray-400">1 User</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Up to 3 Users</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Up to 5–10 Users</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Dedicated Onboarding</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Yes</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Email Support</td>
+                  <td class="py-3 px-3 text-center text-gray-300">✓</td>
+                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Priority Email</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Dedicated Support</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Call Support</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Yes</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">WhatsApp Support</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-gray-500">—</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
+                </tr>
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="py-3 px-3 font-medium text-gray-200">Response SLA</td>
+                  <td class="py-3 px-3 text-center text-gray-400">1–2 Business Days</td>
+                  <td class="py-3 px-3 text-center text-gray-300 font-medium">8–12 Hours</td>
+                  <td class="py-3 px-3 text-center text-white font-bold">⚡ 3–4 Hours</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Other details: per-quality credits & pricing -->
+    <section class="mt-14">
+      <div class="text-center mb-6">
+        <h3 class="text-lg font-bold text-gray-100">Other details</h3>
+        <p class="text-sm text-gray-500 mt-1">Credits &amp; per-unit pricing by output quality <span class="text-gray-600">· 1 credit = $0.02</span></p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Images reference -->
+        <div class="glass glass-sheen relative rounded-2xl p-5 overflow-hidden">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-4.5-4.5L5.5 21.5"/></svg>
+            </div>
+            <h4 class="text-sm font-bold text-gray-100">Images</h4>
+          </div>
+          <table class="w-full text-xs">
+            <thead>
+              <tr class="text-gray-500 border-b border-white/10">
+                <th class="text-left font-medium pb-2">Quality</th>
+                <th class="text-right font-medium pb-2">Credits / image</th>
+                <th class="text-right font-medium pb-2">Price / image</th>
+              </tr>
+            </thead>
+            <tbody id="details-images"></tbody>
+          </table>
+        </div>
+
+        <!-- Video reference -->
+        <div class="glass glass-sheen relative rounded-2xl p-5 overflow-hidden">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect x="2.5" y="5" width="15" height="14" rx="2.5"/><path d="M17.5 10l4-2.2v8.4l-4-2.2z"/></svg>
+            </div>
+            <h4 class="text-sm font-bold text-gray-100">Video</h4>
+          </div>
+          <table class="w-full text-xs">
+            <thead>
+              <tr class="text-gray-500 border-b border-white/10">
+                <th class="text-left font-medium pb-2">Quality</th>
+                <th class="text-right font-medium pb-2">Credits / sec</th>
+                <th class="text-right font-medium pb-2">Price / 1 sec</th>
+              </tr>
+            </thead>
+            <tbody id="details-videos"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Custom quote modal -->
+  <div id="quote-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div id="quote-modal-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+
+    <div class="glass glass-sheen relative w-full max-w-md rounded-2xl p-6 sm:p-8 fade-in">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-gray-100">Request a custom quote</h3>
+          <p class="text-sm text-gray-500 mt-1">Tell us about your team and we'll follow up within a day.</p>
+        </div>
+        <button id="close-quote-modal" class="text-gray-500 hover:text-gray-200 transition-colors -mt-1 -mr-1 p-1">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <form class="space-y-4" id="quote-form">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1.5">Category</label>
+          <select class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-gray-100 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50">
+            <option>E-commerce &amp; retail</option>
+            <option>Marketing &amp; advertising</option>
+            <option>Media &amp; entertainment</option>
+            <option>Gaming</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1.5">Brand / product name</label>
+          <input type="text" placeholder="e.g. Acme Studio"
+            class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-gray-100 placeholder-neutral-500/70 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1.5">Work email</label>
+          <input type="email" placeholder="you@company.com"
+            class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-gray-100 placeholder-neutral-500/70 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1.5">Estimated monthly volume</label>
+          <input type="text" placeholder="e.g. 5,000 images, 1,200 videos"
+            class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-gray-100 placeholder-neutral-500/70 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50" />
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="cancel-quote-modal" class="flex-1 py-2.5 rounded-xl border border-surface-border bg-neutral-800/30 text-gray-400 font-medium active:scale-[0.98] transition-transform hover:text-gray-200">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-white text-black font-bold active:scale-[0.98] transition-transform hover:bg-gray-100">
+            Submit request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+(function () {
+  // ===== Pricing data (from founder pricing sheet) =====
+  // Standard credit cost = $0.02/credit. Images: usdPerImage = credits * 0.02.
+  const imageTypes = [
+    { id: '1k',   label: '1K',      sub: '1024px',      credits: 100, usdPerImage: 2 },
+    { id: '2k',   label: '2K',      sub: '2048px',      credits: 200, usdPerImage: 4 },
+    { id: '4k6k', label: '4K / 6K', sub: '3840–6144px', credits: 400, usdPerImage: 8 },
+  ];
+  // Video: usdPerSec = credits/sec * 0.02 (internally-consistent rate card).
+  const videoTypes = [
+    { id: '720',  label: '720p',  credits: 200, usdPerSec: 4  },
+    { id: '1080', label: '1080p', credits: 350, usdPerSec: 7  },
+    { id: '4k',   label: '4K',    credits: 650, usdPerSec: 13 },
+  ];
+  const clipLengths = [
+    { id: '6',  label: '6s',  seconds: 6  },
+    { id: '8',  label: '8s',  seconds: 8  },
+    { id: '10', label: '10s', seconds: 10 },
+    { id: '15', label: '15s', seconds: 15 },
+    { id: '20', label: '20s', seconds: 20 },
+    { id: '30', label: '30s', seconds: 30 },
+    { id: '45', label: '45s', seconds: 45 },
+    { id: '60', label: '60s', seconds: 60 },
+  ];
+
+  // Volume milestones — some unlock a discount on that media's base cost.
+  const imageMilestones = [
+    { value: 100, discount: 0 },
+    { value: 200, discount: 0 },
+    { value: 300, discount: 0.05 },
+    { value: 400, discount: 0.08 },
+    { value: 500, discount: 0.12 },
+  ];
+  const videoMilestones = [
+    { value: 10, discount: 0 },
+    { value: 20, discount: 0 },
+    { value: 30, discount: 0.05 },
+    { value: 40, discount: 0.08 },
+    { value: 50, discount: 0.12 },
+  ];
+
+  // Highest discount unlocked at the current value.
+  function volumeDiscount(value, milestones) {
+    let d = 0;
+    milestones.forEach(m => { if (value >= m.value) d = Math.max(d, m.discount); });
+    return d;
+  }
+
+  // Commitment discount terms (quarterly = 10% off, yearly = 15% off).
+  const terms = [
+    { id: 'monthly',   label: 'Monthly',   months: 1,  discount: 0.00, billed: 'Billed monthly' },
+    { id: 'quarterly', label: 'Quarterly', months: 3,  discount: 0.10, billed: 'billed quarterly', tag: '10% OFF' },
+    { id: 'yearly',    label: 'Yearly',    months: 12, discount: 0.15, billed: 'billed yearly', best: true, tag: '15% OFF' },
+  ];
+
+  const currencies = {
+    usd: { symbol: '$', rate: 1,   dp: 2 },
+    inr: { symbol: '₹', rate: 100, dp: 0 }, // sheet FX: $1 ≈ ₹100
+    aed: { symbol: 'AED ', rate: 3.67, dp: 0 },
+    sar: { symbol: 'SAR ', rate: 3.75, dp: 0 },
+    qar: { symbol: 'QAR ', rate: 3.64, dp: 0 },
+    kwd: { symbol: 'KWD ', rate: 0.31, dp: 2 },
+    bhd: { symbol: 'BHD ', rate: 0.38, dp: 2 },
+    omr: { symbol: 'OMR ', rate: 0.38, dp: 2 },
+  };
+
+  // Managed service add-ons (sheet: managed = +$2/image, +$4/video)
+  const MANAGED_IMAGE_ADDON = 2;
+  const MANAGED_VIDEO_ADDON = 4;
+
+  let state = {
+    imageType: '1k',
+    images: 0,
+    videoType: '720',
+    clip: '8',
+    videos: 0,
+    imgManaged: false,
+    vidManaged: false,
+    currency: 'usd',
+    selectedTerm: 'yearly',
+  };
+
+  // ===== Helpers =====
+  function money(usd) {
+    const c = currencies[state.currency];
+    const v = usd * c.rate;
+    return c.symbol + v.toLocaleString('en-US', { minimumFractionDigits: c.dp, maximumFractionDigits: c.dp });
+  }
+
+  function monthlyBase() {
+    const it = imageTypes.find(x => x.id === state.imageType);
+    const vt = videoTypes.find(x => x.id === state.videoType);
+    const cl = clipLengths.find(x => x.id === state.clip);
+    const imgDisc = volumeDiscount(state.images, imageMilestones);
+    const vidDisc = volumeDiscount(state.videos, videoMilestones);
+    const imgBase = state.images * it.usdPerImage * (1 - imgDisc);
+    const imgManaged = state.imgManaged ? state.images * MANAGED_IMAGE_ADDON : 0;
+    const vidUnit = vt.usdPerSec * cl.seconds;          // cost per video
+    const vidBase = state.videos * vidUnit * (1 - vidDisc);
+    const vidManaged = state.vidManaged ? state.videos * MANAGED_VIDEO_ADDON : 0;
+    return {
+      imgBase, imgManaged, vidBase, vidManaged, vidUnit, imgDisc, vidDisc,
+      total: imgBase + imgManaged + vidBase + vidManaged,
+    };
+  }
+
+  // Live credit counters shown inside each configurator card.
+  function updateDerived() {
+    const it = imageTypes.find(x => x.id === state.imageType);
+    const vt = videoTypes.find(x => x.id === state.videoType);
+    const cl = clipLengths.find(x => x.id === state.clip);
+    const imgCredits = it.credits * state.images;
+    const vidCredits = vt.credits * cl.seconds * state.videos;
+    document.getElementById('images-credits').textContent = imgCredits.toLocaleString('en-US');
+    document.getElementById('videos-credits').textContent = vidCredits.toLocaleString('en-US');
+  }
+
+  // Static per-quality reference tables (price follows the currency toggle).
+  function renderDetails() {
+    const imgBody = document.getElementById('details-images');
+    const vidBody = document.getElementById('details-videos');
+    if (!imgBody || !vidBody) return;
+    imgBody.innerHTML = imageTypes.map(q => `
+      <tr class="border-b border-white/5 last:border-0">
+        <td class="py-2.5 font-semibold text-gray-100">${q.label}</td>
+        <td class="py-2.5 text-right tabular-nums text-gray-300">${q.credits.toLocaleString('en-US')}</td>
+        <td class="py-2.5 text-right tabular-nums font-semibold text-gray-100">${money(q.usdPerImage)}</td>
+      </tr>`).join('');
+    vidBody.innerHTML = videoTypes.map(q => `
+      <tr class="border-b border-white/5 last:border-0">
+        <td class="py-2.5 font-semibold text-gray-100">${q.label}</td>
+        <td class="py-2.5 text-right tabular-nums text-gray-300">${q.credits.toLocaleString('en-US')}</td>
+        <td class="py-2.5 text-right tabular-nums font-semibold text-gray-100">${money(q.usdPerSec)}</td>
+      </tr>`).join('');
+  }
+
+  // Recompute everything that depends on the current selection.
+  function refresh() {
+    updateDerived();
+    renderPlans();
+    renderDetails();
+  }
+
+  // ===== Generic pill group =====
+  function renderPills(wrap, items, size) {
+    wrap.innerHTML = '';
+    items.forEach(it => {
+      const active = wrap._selected() === it.id;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = [
+        'rounded-lg border transition-all active:scale-[0.98] text-center',
+        size === 'sm' ? 'px-2 py-1.5' : 'px-3 py-2',
+        active
+          ? 'border-brand bg-brand/15 ring-1 ring-brand shadow-[0_0_12px_rgba(59,130,246,0.25)]'
+          : 'border-surface-border bg-neutral-800/30 hover:border-neutral-700',
+      ].join(' ');
+      btn.innerHTML = `
+        <span class="block text-sm ${active ? 'text-white font-bold' : 'text-gray-100 font-semibold'}">${it.label}</span>
+        ${it.sub ? `<span class="block text-[10px] mt-0.5 ${active ? 'text-brand-300' : 'text-gray-500'}">${it.sub}</span>` : ''}
+      `;
+      btn.addEventListener('click', () => wrap._onSelect(it.id));
+      wrap.appendChild(btn);
+    });
+  }
+
+  function setupPills(id, items, selectedGetter, onSelect, size) {
+    const wrap = document.getElementById(id);
+    wrap._selected = selectedGetter;
+    wrap._onSelect = (val) => { onSelect(val); renderPills(wrap, items, size); };
+    renderPills(wrap, items, size);
+    return wrap;
+  }
+
+  // ===== Slider with milestone quick-jumps =====
+  function setupSlider({ sliderId, milestonesWrapId, valueLabelId, milestones, stateKey }) {
+    const slider = document.getElementById(sliderId);
+    const milestonesWrap = document.getElementById(milestonesWrapId);
+    const valueLabel = document.getElementById(valueLabelId);
+    const min = Number(slider.min), max = Number(slider.max);
+    const THUMB = 18; // must match .ora-slider thumb width
+    const pct = (v) => ((v - min) / (max - min)) * 100;
+    // Thumb centre is inset by THUMB/2 at each end, so map value -> track pixel position.
+    const posLeft = (v) => {
+      const p = pct(v);
+      return `calc(${p}% + ${(0.5 - p / 100) * THUMB}px)`;
+    };
+
+    function paintTrack() {
+      const stop = posLeft(Number(slider.value));
+      slider.style.background = `linear-gradient(to right, #6366f1 0%, #6366f1 ${stop}, #262626 ${stop}, #262626 100%)`;
+    }
+
+    function renderMilestoneDots() {
+      milestonesWrap.innerHTML = '';
+      const cur = Number(slider.value);
+      milestones.forEach(m => {
+        const reached = cur >= m.value;
+
+        // subtle marker sitting on the track line
+        const dot = document.createElement('span');
+        dot.className = `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full ring-2 ring-neutral-900 ${reached ? 'bg-white' : 'bg-neutral-500'}`;
+        dot.style.left = posLeft(m.value);
+        milestonesWrap.appendChild(dot);
+
+        // clickable label + discount chip clearly below the line
+        const label = document.createElement('button');
+        label.type = 'button';
+        label.className = 'absolute -translate-x-1/2 top-[22px] flex flex-col items-center gap-1 pointer-events-auto';
+        label.style.left = posLeft(m.value);
+        label.innerHTML = `
+          <span class="text-[11px] font-semibold leading-none ${reached ? 'text-gray-200' : 'text-gray-500'}">${m.value.toLocaleString('en-US')}</span>
+          ${m.discount > 0 ? `<span class="text-[9px] font-bold leading-none px-1.5 py-0.5 rounded-full whitespace-nowrap ${
+            reached ? 'text-emerald-300 bg-emerald-500/15 border border-emerald-400/30'
+                    : 'text-emerald-400/60 bg-emerald-500/5 border border-emerald-400/15'
+          }">-${Math.round(m.discount * 100)}%</span>` : ''}
+        `;
+        label.addEventListener('click', () => { slider.value = m.value; slider.dispatchEvent(new Event('input')); });
+        milestonesWrap.appendChild(label);
+      });
+    }
+
+    function update() {
+      const value = Number(slider.value);
+      state[stateKey] = value;
+      valueLabel.textContent = value.toLocaleString('en-US');
+      paintTrack();
+      renderMilestoneDots();
+      refresh();
+    }
+
+    slider.addEventListener('input', update);
+    update();
+  }
+
+  // ===== Currency toggle =====
+  function renderCurrency() {
+    const wrap = document.getElementById('currency-toggle');
+    wrap.innerHTML = '';
+    Object.keys(currencies).forEach(code => {
+      const active = state.currency === code;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = [
+        'px-3 py-1.5 font-semibold uppercase transition-all active:scale-[0.98]',
+        active ? 'border border-brand bg-brand/15 text-brand-300 ring-1 ring-brand shadow-[0_0_10px_rgba(59,130,246,0.25)] font-bold' : 'border border-transparent bg-neutral-800/30 text-gray-400 hover:text-gray-200',
+      ].join(' ');
+      btn.textContent = code;
+      btn.addEventListener('click', () => {
+        state.currency = code;
+        renderCurrency();
+        renderPlans();
+        renderDetails();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ===== Generated plan blocks =====
+  const plansSection = document.getElementById('plans-section');
+  const plansGrid = document.getElementById('plans-grid');
+
+  function renderPlans() {
+    const base = monthlyBase();
+    const it = imageTypes.find(x => x.id === state.imageType);
+    const vt = videoTypes.find(x => x.id === state.videoType);
+    const cl = clipLengths.find(x => x.id === state.clip);
+    plansGrid.innerHTML = '';
+
+    terms.forEach((t, i) => {
+      const factor = t.months * (1 - t.discount);
+      const imgTerm = base.imgBase * factor;
+      const vidTerm = base.vidBase * factor;
+      const imgMgdTerm = base.imgManaged * factor;
+      const vidMgdTerm = base.vidManaged * factor;
+      const termTotal = base.total * factor;
+      const perMonth = base.total * (1 - t.discount);
+      const active = state.selectedTerm === t.id;
+
+      const gearIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-brand-400 shrink-0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`;
+
+      const managedLines =
+        (imgMgdTerm > 0 ? `
+          <li class="flex items-center justify-between gap-2">
+            <span class="flex items-center gap-2">${gearIcon} ORA Design Studio · images</span>
+            <span class="text-gray-200 font-medium tabular-nums">+${money(imgMgdTerm)}</span>
+          </li>` : '') +
+        (vidMgdTerm > 0 ? `
+          <li class="flex items-center justify-between gap-2">
+            <span class="flex items-center gap-2">${gearIcon} ORA Design Studio · video</span>
+            <span class="text-gray-200 font-medium tabular-nums">+${money(vidMgdTerm)}</span>
+          </li>` : '');
+
+      const card = document.createElement('div');
+      card.className = [
+        'glass glass-sheen lift relative rounded-2xl p-6 sm:p-7 sm:py-8 flex flex-col transition-all',
+        active ? 'ring-2 ring-brand !border-brand shadow-[0_0_30px_rgba(59,130,246,0.25)] bg-brand/[0.05]' : '',
+      ].join(' ');
+
+      const imgCredits = it.credits * state.images;
+      const vidCredits = vt.credits * cl.seconds * state.videos;
+      const totalMonthlyCredits = imgCredits + vidCredits;
+      const totalTermCredits = totalMonthlyCredits * t.months;
+
+      const badge = t.best
+        ? `<span class="absolute -top-2.5 left-6 bg-black border border-neutral-700 px-3 py-0.5 rounded-full shadow-xl z-10"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
+        : '';
+
+      const discountBadge = t.tag
+        ? `<span class="absolute -top-2.5 right-6 text-[10px] font-extrabold uppercase tracking-wide bg-emerald-400 text-black px-3 py-0.5 rounded-full shadow-md z-10">${t.tag}</span>`
+        : '';
+
+      const savingsRow = `<div class="text-xs text-gray-400 mt-1.5 font-medium">${t.months === 1 ? 'Pay as you go' : 'Lock in for ' + t.months + ' months'}</div>`;
+
+      card.innerHTML = `
+        ${badge}
+        ${discountBadge}
+        <div class="text-base font-bold text-gray-100">${t.label}</div>
+        ${savingsRow}
+        <div class="mt-6 flex items-baseline gap-1.5">
+          <span class="text-4xl font-extrabold text-white tracking-tight">${money(perMonth)}</span>
+          <span class="text-gray-400 text-sm font-medium">/mo</span>
+        </div>
+        <div class="text-xs mt-2 font-medium ${t.months === 1 ? 'text-gray-500' : 'text-gray-300'}">${
+          t.months === 1
+            ? 'Billed monthly'
+            : `<span class="font-bold text-white">${money(termTotal)}</span> total · billed ${t.months === 3 ? 'quarterly' : 'yearly'}`
+        }</div>
+
+        <div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-1 text-xs">
+          <span class="font-medium text-white/90 flex items-center gap-1.5 text-xs sm:text-[13px]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-white/70 shrink-0"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span>${totalTermCredits.toLocaleString('en-US')} total credits</span>
+          </span>
+          ${t.months > 1 ? `<span class="text-gray-400 text-xs font-normal">(${totalMonthlyCredits.toLocaleString('en-US')}/mo)</span>` : ''}
+        </div>
+
+        <div class="h-px bg-white/10 my-6"></div>
+
+        <ul class="space-y-3.5 text-xs sm:text-[13px] text-gray-300 flex-1 my-2">
+          <li class="flex items-center justify-between gap-2">
+            <span class="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 shrink-0"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-4.5-4.5L5.5 21.5"/></svg>
+              ${state.images.toLocaleString('en-US')} × ${it.label} images${base.imgDisc > 0 ? ` <span class="text-emerald-400 font-semibold">-${Math.round(base.imgDisc * 100)}%</span>` : ''}
+            </span>
+            <span class="text-white font-semibold tabular-nums">${money(imgTerm)}</span>
+          </li>
+          <li class="flex items-center justify-between gap-2">
+            <span class="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 shrink-0"><rect x="2.5" y="5" width="15" height="14" rx="2.5"/><path d="M17.5 10l4-2.2v8.4l-4-2.2z"/></svg>
+              ${state.videos.toLocaleString('en-US')} × ${vt.label} · ${cl.label}${base.vidDisc > 0 ? ` <span class="text-emerald-400 font-semibold">-${Math.round(base.vidDisc * 100)}%</span>` : ''}
+            </span>
+            <span class="text-white font-semibold tabular-nums">${money(vidTerm)}</span>
+          </li>
+          ${managedLines}
+        </ul>
+
+        <button data-term="${t.id}" class="mt-8 w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm active:scale-[0.98] transition-all shadow-lg ${
+          active ? 'border border-brand bg-brand/20 text-white ring-1 ring-brand shadow-[0_0_15px_rgba(59,130,246,0.25)]'
+                 : 'border border-surface-border bg-neutral-800/30 text-gray-300 hover:text-white hover:border-neutral-700'
+        }">${active ? 'Selected' : 'Choose ' + t.label}</button>
+      `;
+
+      card.querySelector('button[data-term]').addEventListener('click', () => {
+        state.selectedTerm = t.id;
+        renderPlans();
+      });
+
+      plansGrid.appendChild(card);
+    });
+  }
+
+  // ===== Init =====
+  renderCurrency();
+  setupPills('image-type', imageTypes, () => state.imageType, v => { state.imageType = v; refresh(); }, 'md');
+  setupPills('video-type', videoTypes, () => state.videoType, v => { state.videoType = v; refresh(); }, 'md');
+  setupPills('clip-length', clipLengths, () => state.clip, v => { state.clip = v; refresh(); }, 'sm');
+
+  setupSlider({ sliderId: 'images-slider', milestonesWrapId: 'images-milestones', valueLabelId: 'images-value', milestones: imageMilestones, stateKey: 'images' });
+  setupSlider({ sliderId: 'videos-slider', milestonesWrapId: 'videos-milestones', valueLabelId: 'videos-value', milestones: videoMilestones, stateKey: 'videos' });
+
+  // Managed-service checkboxes
+  document.getElementById('img-managed').addEventListener('change', (e) => {
+    state.imgManaged = e.target.checked;
+    renderPlans();
+  });
+  document.getElementById('vid-managed').addEventListener('change', (e) => {
+    state.vidManaged = e.target.checked;
+    renderPlans();
+  });
+
+  // Show live plans from the start (0 images / 0 videos → $0).
+  refresh();
+
+  // ===== Modal =====
+  const modal = document.getElementById('quote-modal');
+  const openBtn = document.getElementById('open-quote-modal');
+  const closeBtn = document.getElementById('close-quote-modal');
+  const cancelBtn = document.getElementById('cancel-quote-modal');
+  const backdrop = document.getElementById('quote-modal-backdrop');
+  const form = document.getElementById('quote-form');
+  const openModal = () => { modal.classList.remove('hidden'); modal.classList.add('flex'); };
+  const closeModal = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  form.addEventListener('submit', (e) => { e.preventDefault(); closeModal(); });
+})();
+</script>
+
+</body>
+</html>
