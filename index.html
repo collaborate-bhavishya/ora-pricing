@@ -353,15 +353,14 @@
       <div id="plans-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"></div>
 
       <!-- Enterprise Deal Clickable Line -->
-      <div class="mt-8 text-center">
+      <div class="mt-4 flex justify-end">
         <button
           type="button"
           id="open-enterprise-deal-btn"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-neutral-900/90 hover:bg-neutral-800 border border-brand/40 hover:border-brand text-sm font-semibold text-gray-200 hover:text-white transition-all group shadow-lg shadow-brand/10 cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-neutral-900/80 hover:bg-neutral-800 border border-neutral-700/80 hover:border-brand/60 text-xs sm:text-sm font-semibold text-gray-300 hover:text-white transition-all cursor-pointer"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 group-hover:scale-110 transition-transform"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          <span>Enterprise Deal</span>
-          <span class="text-xs text-brand-400 font-bold group-hover:translate-x-0.5 transition-transform">Have a deal code? Unlock custom slashed pricing →</span>
+          <span>Enterprise</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-brand-400"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </button>
       </div>
 
@@ -1035,8 +1034,6 @@
 
   // ===== Generated plan blocks =====
   const plansSection = document.getElementById('plans-section');
-  const plansGrid = document.getElementById('plans-grid');
-
   function renderPlans() {
     const base = monthlyBase();
     const it = imageTypes.find(x => x.id === state.imageType);
@@ -1050,12 +1047,12 @@
 
     terms.forEach((t, i) => {
       const active = state.selectedTerm === t.id;
-      if (mainGrid) mainGrid.appendChild(createPlanCardElement(t, i, base, it, vt, cl, active));
-      if (entGrid) entGrid.appendChild(createPlanCardElement(t, i, base, it, vt, cl, active));
+      if (mainGrid) mainGrid.appendChild(createPlanCardElement(t, i, base, it, vt, cl, active, false));
+      if (entGrid) entGrid.appendChild(createPlanCardElement(t, i, base, it, vt, cl, active, true));
     });
   }
 
-  function createPlanCardElement(t, i, base, it, vt, cl, active) {
+  function createPlanCardElement(t, i, base, it, vt, cl, active, isEnterpriseGrid) {
     const factor = t.months;
     const imgTerm = base.imgBase * factor;
     const vidTerm = base.vidBase * factor;
@@ -1064,7 +1061,7 @@
     const rawTermTotal = base.total * factor;
     const rawPerMonth = base.total;
 
-    const hasEnt = state.enterpriseDiscount > 0;
+    const hasEnt = isEnterpriseGrid && state.enterpriseDiscount > 0;
     const termTotal = hasEnt ? rawTermTotal * (1 - state.enterpriseDiscount) : rawTermTotal;
     const perMonth = hasEnt ? rawPerMonth * (1 - state.enterpriseDiscount) : rawPerMonth;
 
@@ -1113,17 +1110,19 @@
     const savingsRow = `<div class="text-xs text-gray-400 mt-1.5 font-medium">${t.months === 1 ? 'Pay as you go' : 'Lock in for ' + t.months + ' months'}</div>`;
 
     const entBadgeHtml = hasEnt
-      ? `<div class="mt-4 mb-1 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wide">
-           <span>ENTERPRISE CODE DIVI30 (-30% OFF)</span>
+      ? `<div class="mt-4 mb-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wide">
+           <span>DIVI30 APPLIED (-30% OFF)</span>
          </div>`
       : '';
 
     const priceSectionHtml = hasEnt
       ? `${entBadgeHtml}
-         <div class="mt-2 flex items-baseline gap-2">
-           <span class="text-2xl font-bold text-gray-500 line-through">${money(rawTermTotal)}</span>
-           <span class="text-4xl font-extrabold text-white tracking-tight">${money(termTotal)}</span>
-           <span class="text-gray-400 text-sm font-medium">total</span>
+         <div class="mt-1">
+           <div class="text-sm sm:text-base font-semibold text-gray-400 line-through">${money(rawTermTotal)} total</div>
+           <div class="mt-0.5 flex items-baseline gap-1.5">
+             <span class="text-4xl font-extrabold text-white tracking-tight">${money(termTotal)}</span>
+             <span class="text-gray-400 text-sm font-medium">total</span>
+           </div>
          </div>`
       : `<div class="mt-6 flex items-baseline gap-1.5">
            <span class="text-4xl font-extrabold text-white tracking-tight">${money(termTotal)}</span>
@@ -1239,6 +1238,11 @@
   const closeEnterpriseModal = () => {
     entModal.classList.add('hidden');
     entModal.classList.remove('flex');
+    state.enterpriseDiscount = 0;
+    state.enterpriseCode = '';
+    if (entCodeInput) entCodeInput.value = '';
+    if (entMsg) entMsg.innerHTML = '';
+    renderPlans();
   };
 
   if (openEntBtn) openEntBtn.addEventListener('click', openEnterpriseModal);
