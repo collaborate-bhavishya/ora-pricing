@@ -1110,8 +1110,8 @@
     const savingsRow = `<div class="text-xs text-gray-400 mt-1.5 font-medium">${t.months === 1 ? 'Pay as you go' : 'Lock in for ' + t.months + ' months'}</div>`;
 
     const entBadgeHtml = hasEnt
-      ? `<div class="mt-4 mb-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wide">
-           <span>DIVI30 APPLIED (-30% OFF)</span>
+      ? `<div class="mt-4 mb-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-extrabold uppercase tracking-wide shadow-sm">
+           <span>DIVI30 APPLIED (-30% ENTERPRISE DEAL)</span>
          </div>`
       : '';
 
@@ -1120,7 +1120,7 @@
          <div class="mt-1">
            <div class="text-sm sm:text-base font-semibold text-gray-400 line-through">${money(rawTermTotal)} total</div>
            <div class="mt-0.5 flex items-baseline gap-1.5">
-             <span class="text-4xl font-extrabold text-white tracking-tight">${money(termTotal)}</span>
+             <span class="text-4xl font-extrabold text-amber-400 tracking-tight">${money(termTotal)}</span>
              <span class="text-gray-400 text-sm font-medium">total</span>
            </div>
          </div>`
@@ -1132,7 +1132,7 @@
     const monthlyDisplay = t.months === 1
       ? 'Billed monthly'
       : hasEnt
-        ? `<span class="line-through text-gray-500 mr-1">${money(rawPerMonth)}/mo</span> <span class="font-bold text-emerald-400">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`
+        ? `<span class="line-through text-gray-500 mr-1">${money(rawPerMonth)}/mo</span> <span class="font-bold text-amber-400">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`
         : `<span class="font-bold text-white">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
 
     card.innerHTML = `
@@ -1278,7 +1278,7 @@
     if (raw.toLowerCase() === 'divi30') {
       state.enterpriseDiscount = 0.30;
       state.enterpriseCode = 'Divi30';
-      entMsg.innerHTML = '<span class="inline-flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full">✨ Enterprise Deal Code <b>DIVI30</b> Applied — 30% Special Discount Unlocked!</span>';
+      entMsg.innerHTML = '<span class="inline-flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-sm">✨ Enterprise Deal Code <b>DIVI30</b> Applied — 30% VIP Enterprise Discount Unlocked!</span>';
     } else if (raw === '') {
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
