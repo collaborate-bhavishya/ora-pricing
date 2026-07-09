@@ -605,7 +605,7 @@
   // Commitment bonus terms (additional free credits % controlled by Admin Panel).
   let allTerms = [
     { id: 'monthly',   label: '1 Month Plan',   months: 1,  discount: 0.00, bonusPct: 0.00, billed: 'billed monthly' },
-    { id: 'quarterly', label: '3 Months Plan',  months: 3,  discount: 0.00, bonusPct: 0.10, billed: 'billed every 3 months', tag: '+10% FREE CREDITS' },
+    { id: 'quarterly', label: '3 Months Plan',  months: 3,  discount: 0.00, bonusPct: 0.00, billed: 'billed every 3 months' },
     { id: 'six_month', label: '6 Months Plan',  months: 6,  discount: 0.00, bonusPct: 0.12, billed: 'billed every 6 months', tag: '+12% FREE CREDITS' },
     { id: 'yearly',    label: '12 Months Plan', months: 12, discount: 0.00, bonusPct: 0.15, billed: 'billed every 12 months', best: true, tag: '+15% FREE CREDITS' },
   ];
@@ -719,7 +719,7 @@
           }
           if (r.quarterly_bonus_pct !== undefined) {
             const tQ = allTerms.find(x => x.id === 'quarterly');
-            if (tQ) { tQ.bonusPct = Number(r.quarterly_bonus_pct) / 100; tQ.tag = Number(r.quarterly_bonus_pct) > 0 ? `+${Number(r.quarterly_bonus_pct)}% FREE CREDITS` : ''; }
+            if (tQ) { tQ.bonusPct = 0; tQ.tag = ''; }
           }
           if (r.six_month_bonus_pct !== undefined) {
             const t6 = allTerms.find(x => x.id === 'six_month');
