@@ -551,7 +551,7 @@
     { id: 'six_month', label: '6 Months Plan',  months: 6,  discount: 0.00, bonusPct: 0.12, billed: 'billed every 6 months', tag: '+12% FREE CREDITS' },
     { id: 'yearly',    label: '12 Months Plan', months: 12, discount: 0.00, bonusPct: 0.15, billed: 'billed every 12 months', best: true, tag: '+15% FREE CREDITS' },
   ];
-  let activeTerms = ['monthly', 'quarterly', 'yearly'];
+  let activeTerms = ['quarterly', 'six_month', 'yearly'];
   let terms = allTerms.filter(t => activeTerms.includes(t.id));
   let planFeatures = null;
 
@@ -1026,10 +1026,10 @@
         active ? 'ring-2 ring-brand !border-brand shadow-[0_0_30px_rgba(59,130,246,0.25)] bg-brand/[0.05]' : '',
       ].join(' ');
 
-      const imgCredits = Math.round(it.credits * state.images * (1 + (t.bonusPct || 0)));
-      const vidCredits = Math.round(vt.credits * cl.seconds * state.videos * (1 + (t.bonusPct || 0)));
-      const totalMonthlyCredits = imgCredits + vidCredits;
-      const totalTermCredits = totalMonthlyCredits * t.months;
+      const baseMonthlyCredits = (it.credits * state.images) + (vt.credits * cl.seconds * state.videos);
+      const baseTermCredits = baseMonthlyCredits * t.months;
+      const freeCredits = Math.round(baseTermCredits * (t.bonusPct || 0));
+      const totalTermCredits = baseTermCredits + freeCredits;
 
       const badge = t.best
         ? `<span class="absolute -top-2.5 left-6 bg-black border border-neutral-700 px-3 py-0.5 rounded-full shadow-xl z-10"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
@@ -1047,13 +1047,13 @@
         <div class="text-base font-bold text-gray-100">${t.label}</div>
         ${savingsRow}
         <div class="mt-6 flex items-baseline gap-1.5">
-          <span class="text-4xl font-extrabold text-white tracking-tight">${money(perMonth)}</span>
-          <span class="text-gray-400 text-sm font-medium">/mo</span>
+          <span class="text-4xl font-extrabold text-white tracking-tight">${money(termTotal)}</span>
+          <span class="text-gray-400 text-sm font-medium">total</span>
         </div>
         <div class="text-xs mt-2 font-medium ${t.months === 1 ? 'text-gray-500' : 'text-gray-300'}">${
           t.months === 1
             ? 'Billed monthly'
-            : `<span class="font-bold text-white">${money(termTotal)}</span> total · ${t.billed || 'billed every ' + t.months + ' months'}`
+            : `<span class="font-bold text-white">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`
         }</div>
 
         <div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-1 text-xs">
@@ -1061,8 +1061,23 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-white/70 shrink-0"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             <span>${totalTermCredits.toLocaleString('en-US')} total credits</span>
           </span>
-          ${t.months > 1 ? `<span class="text-gray-400 text-xs font-normal">(${totalMonthlyCredits.toLocaleString('en-US')}/mo)</span>` : ''}
+          ${t.months > 1 ? `<span class="text-gray-400 text-xs font-normal">(${Math.round(totalTermCredits / t.months).toLocaleString('en-US')}/mo)</span>` : ''}
         </div>
+
+        ${freeCredits > 0 ? `
+          <div class="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex flex-col gap-1.5 shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-emerald-400 font-bold text-xs sm:text-[13px] flex items-center gap-1.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-emerald-400 shrink-0"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                +${freeCredits.toLocaleString('en-US')} additional free credits
+              </span>
+              <span class="text-[9px] font-extrabold uppercase tracking-wider bg-emerald-400 text-black px-2 py-0.5 rounded-full shrink-0">Limited time offer</span>
+            </div>
+            <div class="text-[11px] font-medium text-emerald-300/90 pl-5">
+              Worth <span class="font-bold text-emerald-300">${money(freeCredits * 0.02)}</span> in free value
+            </div>
+          </div>
+        ` : ''}
 
         <div class="h-px bg-white/10 my-6"></div>
 
