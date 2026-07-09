@@ -232,9 +232,17 @@
           </div>
 
           <div>
-            <div class="flex items-baseline justify-between mb-1.5">
-              <div class="text-xs font-medium text-gray-400">Images / month</div>
-              <span class="text-lg font-extrabold tabular-nums text-gray-100" id="images-value">0</span>
+            <div class="flex items-center justify-between mb-2">
+              <label for="images-value" class="text-xs font-medium text-gray-400">Images / month</label>
+              <input
+                type="number"
+                id="images-value"
+                min="0"
+                max="500"
+                step="1"
+                class="w-24 sm:w-28 px-2.5 py-1 bg-neutral-900/90 border border-brand/40 hover:border-brand/70 focus:border-brand focus:ring-2 focus:ring-brand/30 rounded-lg text-right text-lg font-extrabold tabular-nums text-white outline-none transition-all shadow-inner"
+                value="0"
+              />
             </div>
             <div class="relative pt-2 pb-10">
               <div class="relative" id="images-sliderrow">
@@ -291,9 +299,17 @@
           </div>
 
           <div>
-            <div class="flex items-baseline justify-between mb-1.5">
-              <div class="text-xs font-medium text-gray-400">Videos / month</div>
-              <span class="text-lg font-extrabold tabular-nums text-gray-100" id="videos-value">0</span>
+            <div class="flex items-center justify-between mb-2">
+              <label for="videos-value" class="text-xs font-medium text-gray-400">Videos / month</label>
+              <input
+                type="number"
+                id="videos-value"
+                min="0"
+                max="50"
+                step="1"
+                class="w-24 sm:w-28 px-2.5 py-1 bg-neutral-900/90 border border-brand/40 hover:border-brand/70 focus:border-brand focus:ring-2 focus:ring-brand/30 rounded-lg text-right text-lg font-extrabold tabular-nums text-white outline-none transition-all shadow-inner"
+                value="0"
+              />
             </div>
             <div class="relative pt-2 pb-10">
               <div class="relative" id="videos-sliderrow">
@@ -349,163 +365,11 @@
           </summary>
           
           <div class="p-5 sm:p-6 pt-0 border-t border-white/10 overflow-x-auto">
-            <table class="w-full text-left text-xs min-w-[620px] mt-4">
-              <thead>
-                <tr class="border-b border-white/10 text-gray-400">
-                  <th class="pb-3.5 font-semibold w-1/3 text-gray-300">Capabilities &amp; Support</th>
-                  <th class="pb-3.5 font-semibold text-center w-2/9">Monthly</th>
-                  <th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">Quarterly</th>
-                  <th class="pb-3.5 font-semibold text-center w-2/9 text-white">Yearly <span class="inline-block bg-black border border-neutral-700 px-2.5 py-0.5 rounded-full ml-1.5 shadow-md align-middle"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span></th>
-                </tr>
+            <table id="comparison-table" class="w-full text-left text-xs min-w-[620px] mt-4">
+              <thead id="comparison-thead">
+                <tr id="comparison-thead-tr" class="border-b border-white/10 text-gray-400"></tr>
               </thead>
-              <tbody class="divide-y divide-white/5">
-                <!-- Section 1: Core AI Capabilities & Generation -->
-                <tr class="bg-neutral-900/50">
-                  <td colspan="4" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">Core AI Capabilities &amp; Generation</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Image Generation</td>
-                  <td class="py-3 px-3 text-center text-gray-300">Yes</td>
-                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Yes</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Video Generation</td>
-                  <td class="py-3 px-3 text-center text-gray-300">Yes</td>
-                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Yes</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Advance ORA AI Models</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Yes</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">AI Assistance (ORA Bot)</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Yes</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Notebook / Workflow</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">AI Notebook Flow</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Usage Limits</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Lower Credits</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Medium Credits</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Highest Credits</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Priority GPU Queue</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Standard</td>
-                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Faster</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Highest Priority</td>
-                </tr>
-
-                <!-- Section 2: Brand & Creative Editing -->
-                <tr class="bg-neutral-900/50">
-                  <td colspan="4" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">Brand &amp; Creative Editing</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Creative Collection</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Limited</td>
-                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Full</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Full</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Brand Identity</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Brand Kit</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Advanced Brand Identity + Guidelines</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Brand Templates</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
-                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Premium</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Custom Brand Templates</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">AI Prompt Assistant</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Custom Prompt Library</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Product Preservation</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Advanced</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Targeted Editing</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Advanced</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Background Generation</td>
-                  <td class="py-3 px-3 text-center text-gray-400">Basic</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Advanced</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Advanced</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Bulk Generation</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Limited</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Unlimited</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Batch Editing</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Limited</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Unlimited</td>
-                </tr>
-
-                <!-- Section 3: Team & Enterprise Support -->
-                <tr class="bg-neutral-900/50">
-                  <td colspan="4" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">Team &amp; Enterprise Support</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Team Members</td>
-                  <td class="py-3 px-3 text-center text-gray-400">1 User</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">Up to 3 Users</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Up to 5–10 Users</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Dedicated Onboarding</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Yes</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Email Support</td>
-                  <td class="py-3 px-3 text-center text-gray-300">✓</td>
-                  <td class="py-3 px-3 text-center text-brand-300 font-medium">Priority Email</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Dedicated Support</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Call Support</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-gray-200 font-medium">Yes</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">WhatsApp Support</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-gray-500">—</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">Yes</td>
-                </tr>
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                  <td class="py-3 px-3 font-medium text-gray-200">Response SLA</td>
-                  <td class="py-3 px-3 text-center text-gray-400">1–2 Business Days</td>
-                  <td class="py-3 px-3 text-center text-gray-300 font-medium">8–12 Hours</td>
-                  <td class="py-3 px-3 text-center text-white font-bold">⚡ 3–4 Hours</td>
-                </tr>
-              </tbody>
+              <tbody id="comparison-tbody" class="divide-y divide-white/5"></tbody>
             </table>
           </div>
         </details>
@@ -670,12 +534,180 @@
     return d;
   }
 
-  // Commitment discount terms (quarterly = 10% off, yearly = 15% off).
-  const terms = [
-    { id: 'monthly',   label: 'Monthly',   months: 1,  discount: 0.00, billed: 'Billed monthly' },
-    { id: 'quarterly', label: 'Quarterly', months: 3,  discount: 0.10, billed: 'billed quarterly', tag: '10% OFF' },
-    { id: 'yearly',    label: 'Yearly',    months: 12, discount: 0.15, billed: 'billed yearly', best: true, tag: '15% OFF' },
+  // Commitment bonus terms (additional free credits % controlled by Admin Panel).
+  let allTerms = [
+    { id: 'monthly',   label: '1 Month Plan',   months: 1,  discount: 0.00, bonusPct: 0.00, billed: 'billed monthly' },
+    { id: 'quarterly', label: '3 Months Plan',  months: 3,  discount: 0.00, bonusPct: 0.10, billed: 'billed every 3 months', tag: '+10% FREE CREDITS' },
+    { id: 'six_month', label: '6 Months Plan',  months: 6,  discount: 0.00, bonusPct: 0.12, billed: 'billed every 6 months', tag: '+12% FREE CREDITS' },
+    { id: 'yearly',    label: '12 Months Plan', months: 12, discount: 0.00, bonusPct: 0.15, billed: 'billed every 12 months', best: true, tag: '+15% FREE CREDITS' },
   ];
+  let activeTerms = ['monthly', 'quarterly', 'yearly'];
+  let terms = allTerms.filter(t => activeTerms.includes(t.id));
+  let planFeatures = null;
+
+  const comparisonRows = [
+    { type: 'section', title: 'Core AI Capabilities & Generation' },
+    { name: 'Image Generation', monthly: 'Yes', quarterly: 'Yes', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-300', qClass: 'text-gray-200 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Video Generation', monthly: 'Yes', quarterly: 'Yes', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-300', qClass: 'text-gray-200 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Advance ORA AI Models', monthly: '—', quarterly: 'Yes', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-500', qClass: 'text-brand-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'AI Assistance (ORA Bot)', monthly: '—', quarterly: 'Yes', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-500', qClass: 'text-brand-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Notebook / Workflow', monthly: '—', quarterly: '—', six_month: 'AI Notebook Flow', yearly: 'AI Notebook Flow', mClass: 'text-gray-500', qClass: 'text-gray-500', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Usage Limits', monthly: 'Lower Credits', quarterly: 'Medium Credits', six_month: 'High Credits', yearly: 'Highest Credits', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Priority GPU Queue', monthly: 'Standard', quarterly: 'Faster', six_month: 'High Priority', yearly: 'Highest Priority', mClass: 'text-gray-400', qClass: 'text-brand-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+
+    { type: 'section', title: 'Brand & Creative Editing' },
+    { name: 'Creative Collection', monthly: 'Limited', quarterly: 'Full', six_month: 'Full', yearly: 'Full', mClass: 'text-gray-400', qClass: 'text-gray-200 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Brand Identity', monthly: '—', quarterly: 'Brand Kit', six_month: 'Brand Kit + Guidelines', yearly: 'Advanced Brand Identity + Guidelines', mClass: 'text-gray-500', qClass: 'text-gray-200 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Brand Templates', monthly: 'Basic', quarterly: 'Premium', six_month: 'Premium + Custom', yearly: 'Custom Brand Templates', mClass: 'text-gray-400', qClass: 'text-brand-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'AI Prompt Assistant', monthly: 'Basic', quarterly: 'Advanced', six_month: 'Advanced', yearly: 'Custom Prompt Library', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Product Preservation', monthly: 'Basic', quarterly: 'Advanced', six_month: 'Advanced', yearly: 'Advanced', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Targeted Editing', monthly: 'Basic', quarterly: 'Advanced', six_month: 'Advanced', yearly: 'Advanced', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Background Generation', monthly: 'Basic', quarterly: 'Advanced', six_month: 'Advanced', yearly: 'Advanced', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Bulk Generation', monthly: '—', quarterly: 'Limited', six_month: 'Unlimited', yearly: 'Unlimited', mClass: 'text-gray-500', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Batch Editing', monthly: '—', quarterly: 'Limited', six_month: 'Unlimited', yearly: 'Unlimited', mClass: 'text-gray-500', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+
+    { type: 'section', title: 'Team & Enterprise Support' },
+    { name: 'Team Members', monthly: '1 User', quarterly: 'Up to 3 Users', six_month: 'Up to 5 Users', yearly: 'Up to 5–10 Users', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Dedicated Onboarding', monthly: '—', quarterly: 'Yes', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-500', qClass: 'text-brand-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Email Support', monthly: '✓', quarterly: 'Priority Email', six_month: 'Priority Email', yearly: 'Dedicated Support', mClass: 'text-gray-300', qClass: 'text-brand-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Call Support', monthly: '—', quarterly: 'Yes', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-500', qClass: 'text-gray-200 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'WhatsApp Support', monthly: '—', quarterly: '—', six_month: 'Yes', yearly: 'Yes', mClass: 'text-gray-500', qClass: 'text-gray-500', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+    { name: 'Response SLA', monthly: '1–2 Business Days', quarterly: '8–12 Hours', six_month: '6–8 Hours', yearly: '⚡ 3–4 Hours', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
+  ];
+
+  function renderComparisonTable() {
+    const theadTr = document.getElementById('comparison-thead-tr');
+    if (theadTr) {
+      theadTr.innerHTML = `
+        <th class="pb-3.5 font-semibold w-1/3 text-gray-300">Capabilities &amp; Support</th>
+        ${activeTerms.includes('monthly') ? `<th class="pb-3.5 font-semibold text-center w-2/9">1 Month Plan</th>` : ''}
+        ${activeTerms.includes('quarterly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">3 Months Plan</th>` : ''}
+        ${activeTerms.includes('six_month') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-purple-400">6 Months Plan</th>` : ''}
+        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white">12 Months Plan <span class="inline-block bg-black border border-neutral-700 px-2.5 py-0.5 rounded-full ml-1.5 shadow-md align-middle"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span></th>` : ''}
+      `;
+    }
+    const tbody = document.getElementById('comparison-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = comparisonRows.map(row => {
+      if (row.type === 'section') {
+        const colSpan = 1 + activeTerms.length;
+        return `<tr class="bg-neutral-900/50"><td colspan="${colSpan}" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">${row.title}</td></tr>`;
+      }
+      return `<tr class="hover:bg-white/[0.02] transition-colors">
+        <td class="py-3 px-3 font-medium text-gray-200">${row.name}</td>
+        ${activeTerms.includes('monthly') ? `<td class="py-3 px-3 text-center ${row.mClass || ''}">${row.monthly}</td>` : ''}
+        ${activeTerms.includes('quarterly') ? `<td class="py-3 px-3 text-center ${row.qClass || ''}">${row.quarterly}</td>` : ''}
+        ${activeTerms.includes('six_month') ? `<td class="py-3 px-3 text-center ${row.sClass || ''}">${row.six_month}</td>` : ''}
+        ${activeTerms.includes('yearly') ? `<td class="py-3 px-3 text-center ${row.yClass || ''}">${row.yearly}</td>` : ''}
+      </tr>`;
+    }).join('');
+  }
+
+  async function fetchLiveRules() {
+    const urls = ['/api/pricing-rules', 'http://localhost:3001/api/pricing-rules', 'http://localhost:3000/api/pricing-rules'];
+    for (const url of urls) {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (res.ok && data.success && data.rules) {
+          const r = data.rules;
+          if (r.cost_per_credit) {
+            const el = document.querySelector('.text-gray-600');
+            if (el && el.textContent.includes('1 credit =')) {
+              el.textContent = `· 1 credit = $${Number(r.cost_per_credit)}`;
+            }
+          }
+          if (r.image_1k_credits !== undefined) {
+            const t1 = imageTypes.find(x => x.id === '1k'); if (t1) t1.credits = Number(r.image_1k_credits);
+            const t2 = imageTypes.find(x => x.id === '2k'); if (t2) t2.credits = Number(r.image_2k_credits);
+            const t4 = imageTypes.find(x => x.id === '4k'); if (t4) t4.credits = Number(r.image_4k_credits);
+          }
+          if (r.video_720p_credits_per_sec !== undefined) {
+            const v7 = videoTypes.find(x => x.id === '720'); if (v7) v7.credits = Number(r.video_720p_credits_per_sec);
+            const v10 = videoTypes.find(x => x.id === '1080'); if (v10) v10.credits = Number(r.video_1080p_credits_per_sec);
+            const v4 = videoTypes.find(x => x.id === '4k'); if (v4) v4.credits = Number(r.video_4k_credits_per_sec);
+          }
+          if (r.image_milestones) {
+            const parsed = typeof r.image_milestones === 'string' ? JSON.parse(r.image_milestones) : r.image_milestones;
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              imageMilestones.length = 0;
+              parsed.forEach(m => imageMilestones.push({ value: Number(m.value), discount: Number(m.discount) }));
+            }
+          }
+          if (r.video_milestones) {
+            const parsed = typeof r.video_milestones === 'string' ? JSON.parse(r.video_milestones) : r.video_milestones;
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              videoMilestones.length = 0;
+              parsed.forEach(m => videoMilestones.push({ value: Number(m.value), discount: Number(m.discount) }));
+            }
+          }
+          if (r.active_terms) {
+            const parsed = typeof r.active_terms === 'string' ? JSON.parse(r.active_terms) : r.active_terms;
+            if (Array.isArray(parsed) && parsed.length > 0) activeTerms = parsed;
+          }
+          if (r.monthly_bonus_pct !== undefined) {
+            const tM = allTerms.find(x => x.id === 'monthly');
+            if (tM) { tM.bonusPct = Number(r.monthly_bonus_pct) / 100; tM.tag = Number(r.monthly_bonus_pct) > 0 ? `+${Number(r.monthly_bonus_pct)}% FREE CREDITS` : ''; }
+          }
+          if (r.quarterly_bonus_pct !== undefined) {
+            const tQ = allTerms.find(x => x.id === 'quarterly');
+            if (tQ) { tQ.bonusPct = Number(r.quarterly_bonus_pct) / 100; tQ.tag = Number(r.quarterly_bonus_pct) > 0 ? `+${Number(r.quarterly_bonus_pct)}% FREE CREDITS` : ''; }
+          }
+          if (r.six_month_bonus_pct !== undefined) {
+            const t6 = allTerms.find(x => x.id === 'six_month');
+            if (t6) { t6.bonusPct = Number(r.six_month_bonus_pct) / 100; t6.tag = Number(r.six_month_bonus_pct) > 0 ? `+${Number(r.six_month_bonus_pct)}% FREE CREDITS` : ''; }
+          }
+          if (r.yearly_bonus_pct !== undefined) {
+            const tY = allTerms.find(x => x.id === 'yearly');
+            if (tY) { tY.bonusPct = Number(r.yearly_bonus_pct) / 100; tY.tag = Number(r.yearly_bonus_pct) > 0 ? `+${Number(r.yearly_bonus_pct)}% FREE CREDITS` : ''; }
+          }
+          if (r.plan_features) {
+            const parsed = typeof r.plan_features === 'string' ? JSON.parse(r.plan_features) : r.plan_features;
+            if (parsed && typeof parsed === 'object') {
+              planFeatures = parsed;
+              const featureNames = [];
+              ['monthly', 'quarterly', 'six_month', 'yearly'].forEach(p => {
+                if (Array.isArray(parsed[p])) {
+                  parsed[p].forEach(f => {
+                    if (f.name && !featureNames.includes(f.name)) featureNames.push(f.name);
+                  });
+                }
+              });
+              if (featureNames.length > 0) {
+                comparisonRows.length = 0;
+                comparisonRows.push({ type: 'section', title: 'Customized Capabilities & Features' });
+                featureNames.forEach(name => {
+                  const getVal = (plan) => {
+                    const found = (parsed[plan] || []).find(f => f.name === name);
+                    return found ? found.value : '—';
+                  };
+                  comparisonRows.push({
+                    name,
+                    monthly: getVal('monthly'),
+                    quarterly: getVal('quarterly'),
+                    six_month: getVal('six_month'),
+                    yearly: getVal('yearly'),
+                    mClass: 'text-gray-300',
+                    qClass: 'text-gray-200 font-medium',
+                    sClass: 'text-purple-300 font-medium',
+                    yClass: 'text-white font-bold'
+                  });
+                });
+              }
+            }
+          }
+          terms = allTerms.filter(t => activeTerms.includes(t.id));
+          if (!activeTerms.includes(state.selectedTerm) && terms.length > 0) {
+            state.selectedTerm = terms[terms.length - 1].id;
+          }
+          refresh();
+          break;
+        }
+      } catch (e) {
+        console.warn('Could not fetch live pricing rules from', url, e);
+      }
+    }
+  }
 
   const currencies = {
     usd: { symbol: '$', rate: 1,   dp: 2 },
@@ -763,6 +795,7 @@
     updateDerived();
     renderPlans();
     renderDetails();
+    renderComparisonTable();
   }
 
   // ===== Generic pill group =====
@@ -847,13 +880,62 @@
     function update() {
       const value = Number(slider.value);
       state[stateKey] = value;
-      valueLabel.textContent = value.toLocaleString('en-US');
+      if (valueLabel.tagName === 'INPUT') {
+        if (document.activeElement !== valueLabel) {
+          valueLabel.value = value;
+        }
+      } else {
+        valueLabel.textContent = value.toLocaleString('en-US');
+      }
       paintTrack();
       renderMilestoneDots();
       refresh();
     }
 
     slider.addEventListener('input', update);
+
+    if (valueLabel.tagName === 'INPUT') {
+      valueLabel.addEventListener('input', () => {
+        const raw = valueLabel.value;
+        if (raw === '') {
+          state[stateKey] = 0;
+          slider.value = 0;
+          paintTrack();
+          renderMilestoneDots();
+          refresh();
+          return;
+        }
+        let val = Number(raw);
+        if (!isNaN(val)) {
+          val = Math.max(min, Math.min(max, val));
+          slider.value = val;
+          state[stateKey] = val;
+          paintTrack();
+          renderMilestoneDots();
+          refresh();
+        }
+      });
+
+      const commitInput = () => {
+        let val = Number(valueLabel.value) || 0;
+        val = Math.max(min, Math.min(max, val));
+        slider.value = val;
+        valueLabel.value = val;
+        state[stateKey] = val;
+        paintTrack();
+        renderMilestoneDots();
+        refresh();
+      };
+
+      valueLabel.addEventListener('blur', commitInput);
+      valueLabel.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          commitInput();
+          valueLabel.blur();
+        }
+      });
+    }
+
     update();
   }
 
@@ -892,13 +974,13 @@
     plansGrid.innerHTML = '';
 
     terms.forEach((t, i) => {
-      const factor = t.months * (1 - t.discount);
+      const factor = t.months;
       const imgTerm = base.imgBase * factor;
       const vidTerm = base.vidBase * factor;
       const imgMgdTerm = base.imgManaged * factor;
       const vidMgdTerm = base.vidManaged * factor;
       const termTotal = base.total * factor;
-      const perMonth = base.total * (1 - t.discount);
+      const perMonth = base.total;
       const active = state.selectedTerm === t.id;
 
       const gearIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-brand-400 shrink-0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`;
@@ -915,14 +997,27 @@
             <span class="text-gray-200 font-medium tabular-nums">+${money(vidMgdTerm)}</span>
           </li>` : '');
 
+      const customFeaturesHtml = (planFeatures && planFeatures[t.id] ? planFeatures[t.id] : [])
+        .filter(f => f.name !== 'Image Generation' && f.name !== 'Video Generation' && f.value !== '—')
+        .slice(0, 4)
+        .map(f => `
+          <li class="flex items-center justify-between gap-2 pt-2 border-t border-white/5 text-gray-300">
+            <span class="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-brand-400 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>${f.name}</span>
+            </span>
+            <span class="font-bold text-white text-right">${f.value}</span>
+          </li>
+        `).join('');
+
       const card = document.createElement('div');
       card.className = [
         'glass glass-sheen lift relative rounded-2xl p-6 sm:p-7 sm:py-8 flex flex-col transition-all',
         active ? 'ring-2 ring-brand !border-brand shadow-[0_0_30px_rgba(59,130,246,0.25)] bg-brand/[0.05]' : '',
       ].join(' ');
 
-      const imgCredits = it.credits * state.images;
-      const vidCredits = vt.credits * cl.seconds * state.videos;
+      const imgCredits = Math.round(it.credits * state.images * (1 + (t.bonusPct || 0)));
+      const vidCredits = Math.round(vt.credits * cl.seconds * state.videos * (1 + (t.bonusPct || 0)));
       const totalMonthlyCredits = imgCredits + vidCredits;
       const totalTermCredits = totalMonthlyCredits * t.months;
 
@@ -948,7 +1043,7 @@
         <div class="text-xs mt-2 font-medium ${t.months === 1 ? 'text-gray-500' : 'text-gray-300'}">${
           t.months === 1
             ? 'Billed monthly'
-            : `<span class="font-bold text-white">${money(termTotal)}</span> total · billed ${t.months === 3 ? 'quarterly' : 'yearly'}`
+            : `<span class="font-bold text-white">${money(termTotal)}</span> total · ${t.billed || 'billed every ' + t.months + ' months'}`
         }</div>
 
         <div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-1 text-xs">
@@ -977,6 +1072,7 @@
             <span class="text-white font-semibold tabular-nums">${money(vidTerm)}</span>
           </li>
           ${managedLines}
+          ${customFeaturesHtml}
         </ul>
 
         <button data-term="${t.id}" class="mt-8 w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm active:scale-[0.98] transition-all shadow-lg ${
@@ -1015,6 +1111,7 @@
 
   // Show live plans from the start (0 images / 0 videos → $0).
   refresh();
+  fetchLiveRules();
 
   // ===== Modal =====
   const modal = document.getElementById('quote-modal');
