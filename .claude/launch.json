@@ -18,8 +18,8 @@
     {
       "name": "pricing-backend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "/Users/bhavishyachaurasia/ora_admin_bhavishya", "start"],
-      "port": 3011,
+      "runtimeArgs": ["--prefix", "/Users/chiragkhanna/oralab/vton-dashboard/backend", "start"],
+      "port": 3001,
       "autoPort": false
     }
   ]
