@@ -187,10 +187,9 @@
     <div class="orb orb-3"></div>
   </div>
 
-  <!-- Top Logo Bar -->
   <header class="relative z-20 max-w-6xl mx-auto px-6 pt-8 sm:pt-10 flex items-center justify-center text-center">
     <a href="#" class="inline-flex items-center justify-center group">
-      <img src="logo.png" alt="ORALAB" class="h-20 sm:h-24 md:h-28 w-auto object-contain transition-all duration-300 group-hover:scale-105 drop-shadow-[0_0_25px_rgba(255,255,255,0.22)]" />
+      <img src="logo.png" alt="ORALAB" class="h-24 sm:h-28 md:h-32 w-auto object-contain transition-all duration-300 group-hover:scale-105 drop-shadow-[0_0_35px_rgba(255,255,255,0.3)]" />
     </a>
   </header>
 
@@ -612,6 +611,18 @@
   let activeTerms = ['quarterly', 'six_month', 'yearly'];
   let terms = allTerms.filter(t => activeTerms.includes(t.id));
   let planFeatures = null;
+  let rockBottomGuardrails = {
+    min_usd_per_image_1k: 55.00,
+    min_usd_per_image_2k: 110.00,
+    min_usd_per_image_4k: 220.00,
+    min_usd_per_video_720: 700.00,
+    min_usd_per_video_1080: 1050.00,
+    min_usd_per_video_4k: 1610.00,
+    max_cumulative_discount_pct: 0.725
+  };
+  let enterpriseCoupons = [
+    { code: 'DIVI30', discount: 0.30, label: '30% VIP Enterprise Deal Discount', active: true }
+  ];
 
   const comparisonRows = [
     { type: 'section', title: 'Core AI Capabilities & Generation' },
@@ -672,79 +683,144 @@
   }
 
   async function fetchLiveRules() {
-    const urls = ['/api/pricing-rules', 'http://localhost:3001/api/pricing-rules', 'http://localhost:3000/api/pricing-rules'];
+    let r = null;
+    const urls = ['https://api.oralab.ai/api/pricing-rules', 'http://localhost:3011/api/pricing-rules'];
     for (const url of urls) {
       try {
         const res = await fetch(url);
         const data = await res.json();
         if (res.ok && data.success && data.rules) {
-          const r = data.rules;
-          if (r.cost_per_credit) {
-            const el = document.querySelector('.text-gray-600');
-            if (el && el.textContent.includes('1 credit =')) {
-              el.textContent = `· 1 credit = $${Number(r.cost_per_credit)}`;
+          r = data.rules;
+          break;
+        }
+      } catch (e) { /* ignore */ }
+    }
+    if (!r) {
+      const cached = localStorage.getItem('ora_admin_pricing_rules_v2');
+      if (cached) {
+        try { r = JSON.parse(cached); } catch (e) {}
+      }
+    }
+    if (r) {
+      if (r.cost_per_credit) {
+        const el = document.querySelector('.text-gray-600');
+        if (el && el.textContent.includes('1 credit =')) {
+          el.textContent = `· 1 credit = ₹${Number(r.cost_per_credit)}`;
+        }
+      }
+      if (r.image_types) {
+        ['1k', '2k', '4k'].forEach(key => {
+          const cfg = r.image_types[key];
+          const t = imageTypes.find(x => x.id === key || (key === '4k' && x.id === '4k6k'));
+          if (cfg && t) {
+            if (cfg.usdPerImage !== undefined) t.usdPerImage = Number(cfg.usdPerImage) / 100;
+            if (cfg.creditsPerImage !== undefined) t.credits = Number(cfg.creditsPerImage);
+          }
+        });
+      }
+      if (r.video_types) {
+        ['720', '1080', '4k'].forEach(key => {
+          const cfg = r.video_types[key];
+          const v = videoTypes.find(x => x.id === key);
+          if (cfg && v) {
+            if (cfg.usdBase !== undefined) {
+              v.usdPerSec = Number(cfg.usdBase) / 100;
+              v.usdBase = Number(cfg.usdBase);
+            }
+            if (cfg.creditsPerSec !== undefined) v.credits = Number(cfg.creditsPerSec);
+          }
+        });
+      }
+      if (r.billing_terms) {
+        Object.entries(r.billing_terms).forEach(([key, cfg]) => {
+          const term = allTerms.find(x => x.id === key);
+          if (term && cfg) {
+            if (cfg.bonusPct !== undefined) {
+              term.bonusPct = Number(cfg.bonusPct);
+              term.tag = Number(cfg.bonusPct) > 0 ? `+${Math.round(cfg.bonusPct * 100)}% FREE CREDITS` : '';
             }
           }
-          if (r.image_1k_credits !== undefined) {
-            const t1 = imageTypes.find(x => x.id === '1k'); if (t1) t1.credits = Number(r.image_1k_credits);
-            const t2 = imageTypes.find(x => x.id === '2k'); if (t2) t2.credits = Number(r.image_2k_credits);
-            const t4 = imageTypes.find(x => x.id === '4k'); if (t4) t4.credits = Number(r.image_4k_credits);
+        });
+      }
+      if (r.image_milestones) {
+        try {
+          const parsed = typeof r.image_milestones === 'string' ? JSON.parse(r.image_milestones) : r.image_milestones;
+          if (Array.isArray(parsed)) {
+            imageMilestones.length = 0;
+            parsed.forEach(m => imageMilestones.push({ value: Number(m.value), discount: Number(m.discount) }));
           }
-          if (r.video_720p_credits_per_sec !== undefined) {
-            const v7 = videoTypes.find(x => x.id === '720'); if (v7) v7.credits = Number(r.video_720p_credits_per_sec);
-            const v10 = videoTypes.find(x => x.id === '1080'); if (v10) v10.credits = Number(r.video_1080p_credits_per_sec);
-            const v4 = videoTypes.find(x => x.id === '4k'); if (v4) v4.credits = Number(r.video_4k_credits_per_sec);
+        } catch (e) {
+          console.warn('Failed parsing image milestones:', e);
+        }
+      }
+      if (r.video_milestones) {
+        try {
+          const parsed = typeof r.video_milestones === 'string' ? JSON.parse(r.video_milestones) : r.video_milestones;
+          if (Array.isArray(parsed)) {
+            videoMilestones.length = 0;
+            parsed.forEach(m => videoMilestones.push({ value: Number(m.value), discount: Number(m.discount) }));
           }
-          if (r.image_milestones) {
-            const parsed = typeof r.image_milestones === 'string' ? JSON.parse(r.image_milestones) : r.image_milestones;
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              imageMilestones.length = 0;
-              parsed.forEach(m => imageMilestones.push({ value: Number(m.value), discount: Number(m.discount) }));
-            }
-          }
-          if (r.video_milestones) {
-            const parsed = typeof r.video_milestones === 'string' ? JSON.parse(r.video_milestones) : r.video_milestones;
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              videoMilestones.length = 0;
-              parsed.forEach(m => videoMilestones.push({ value: Number(m.value), discount: Number(m.discount) }));
-            }
-          }
-          if (r.active_terms) {
-            const parsed = typeof r.active_terms === 'string' ? JSON.parse(r.active_terms) : r.active_terms;
-            if (Array.isArray(parsed) && parsed.length > 0) activeTerms = parsed;
-          }
-          if (r.monthly_bonus_pct !== undefined) {
-            const tM = allTerms.find(x => x.id === 'monthly');
-            if (tM) { tM.bonusPct = Number(r.monthly_bonus_pct) / 100; tM.tag = Number(r.monthly_bonus_pct) > 0 ? `+${Number(r.monthly_bonus_pct)}% FREE CREDITS` : ''; }
-          }
-          if (r.quarterly_bonus_pct !== undefined) {
-            const tQ = allTerms.find(x => x.id === 'quarterly');
-            if (tQ) { tQ.bonusPct = 0; tQ.tag = ''; }
-          }
-          if (r.six_month_bonus_pct !== undefined) {
-            const t6 = allTerms.find(x => x.id === 'six_month');
-            if (t6) { t6.bonusPct = Number(r.six_month_bonus_pct) / 100; t6.tag = Number(r.six_month_bonus_pct) > 0 ? `+${Number(r.six_month_bonus_pct)}% FREE CREDITS` : ''; }
-          }
-          if (r.yearly_bonus_pct !== undefined) {
-            const tY = allTerms.find(x => x.id === 'yearly');
-            if (tY) { tY.bonusPct = Number(r.yearly_bonus_pct) / 100; tY.tag = Number(r.yearly_bonus_pct) > 0 ? `+${Number(r.yearly_bonus_pct)}% FREE CREDITS` : ''; }
-          }
-          if (r.plan_features) {
-            const parsed = typeof r.plan_features === 'string' ? JSON.parse(r.plan_features) : r.plan_features;
-            if (parsed && typeof parsed === 'object') {
-              planFeatures = parsed;
-              const featureNames = [];
-              ['monthly', 'quarterly', 'six_month', 'yearly'].forEach(p => {
-                if (Array.isArray(parsed[p])) {
-                  parsed[p].forEach(f => {
-                    if (f.name && !featureNames.includes(f.name)) featureNames.push(f.name);
-                  });
-                }
-              });
-              if (featureNames.length > 0) {
-                comparisonRows.length = 0;
-                comparisonRows.push({ type: 'section', title: 'Customized Capabilities & Features' });
-                featureNames.forEach(name => {
+        } catch (e) {
+          console.warn('Failed parsing video milestones:', e);
+        }
+      }
+      if (r.active_terms) {
+        try {
+          const parsed = typeof r.active_terms === 'string' ? JSON.parse(r.active_terms) : r.active_terms;
+          if (Array.isArray(parsed) && parsed.length > 0) activeTerms = parsed;
+        } catch (e) {
+          console.warn('Failed parsing active terms:', e);
+        }
+      }
+      if (r.monthly_bonus_pct !== undefined) {
+        const tM = allTerms.find(x => x.id === 'monthly');
+        if (tM) { tM.bonusPct = Number(r.monthly_bonus_pct) / 100; tM.tag = Number(r.monthly_bonus_pct) > 0 ? `+${Number(r.monthly_bonus_pct)}% FREE CREDITS` : ''; }
+      }
+      if (r.quarterly_bonus_pct !== undefined) {
+        const tQ = allTerms.find(x => x.id === 'quarterly');
+        if (tQ) { tQ.bonusPct = 0; tQ.tag = ''; }
+      }
+      if (r.six_month_bonus_pct !== undefined) {
+        const t6 = allTerms.find(x => x.id === 'six_month');
+        if (t6) { t6.bonusPct = Number(r.six_month_bonus_pct) / 100; t6.tag = Number(r.six_month_bonus_pct) > 0 ? `+${Number(r.six_month_bonus_pct)}% FREE CREDITS` : ''; }
+      }
+      if (r.yearly_bonus_pct !== undefined) {
+        const tY = allTerms.find(x => x.id === 'yearly');
+        if (tY) { tY.bonusPct = Number(r.yearly_bonus_pct) / 100; tY.tag = Number(r.yearly_bonus_pct) > 0 ? `+${Number(r.yearly_bonus_pct)}% FREE CREDITS` : ''; }
+      }
+      if (r.plan_features) {
+        try {
+          const parsed = typeof r.plan_features === 'string' ? JSON.parse(r.plan_features) : r.plan_features;
+          if (parsed && typeof parsed === 'object') {
+            planFeatures = parsed;
+            const featureNames = [];
+            ['monthly', 'quarterly', 'six_month', 'yearly'].forEach(p => {
+              if (Array.isArray(parsed[p])) {
+                parsed[p].forEach(f => {
+                  if (f.name && !featureNames.includes(f.name)) featureNames.push(f.name);
+                });
+              }
+            });
+            if (featureNames.length > 0) {
+              comparisonRows.length = 0;
+              const categories = [
+                'Core AI Capabilities & Generation',
+                'Brand & Creative Editing',
+                'Team & Enterprise Support',
+                'Other / Custom Features'
+              ];
+              categories.forEach(cat => {
+                const catFeatures = featureNames.filter(name => {
+                  const found = Object.values(parsed).flatMap(list => list).find(f => f.name === name);
+                  const itemCat = found?.category || 'Other / Custom Features';
+                  return itemCat === cat;
+                });
+                const visibleCatFeatures = catFeatures.filter(name => {
+                  return (parsed.monthly || []).find(f => f.name === name)?.visible !== false;
+                });
+                if (visibleCatFeatures.length === 0) return;
+                comparisonRows.push({ type: 'section', title: cat });
+                visibleCatFeatures.forEach(name => {
                   const getVal = (plan) => {
                     const found = (parsed[plan] || []).find(f => f.name === name);
                     return found ? found.value : '—';
@@ -761,19 +837,33 @@
                     yClass: 'text-white font-bold'
                   });
                 });
-              }
+              });
             }
           }
-          terms = allTerms.filter(t => activeTerms.includes(t.id));
-          if (!activeTerms.includes(state.selectedTerm) && terms.length > 0) {
-            state.selectedTerm = terms[terms.length - 1].id;
-          }
-          refresh();
-          break;
+        } catch (e) {
+          console.warn('Failed parsing plan features:', e);
         }
-      } catch (e) {
-        console.warn('Could not fetch live pricing rules from', url, e);
       }
+      if (r.rock_bottom_guardrails) {
+        rockBottomGuardrails = { ...rockBottomGuardrails, ...r.rock_bottom_guardrails };
+      }
+      if (r.enterprise_coupons) {
+        try {
+          const parsed = typeof r.enterprise_coupons === 'string' ? JSON.parse(r.enterprise_coupons) : r.enterprise_coupons;
+          if (Array.isArray(parsed)) {
+            enterpriseCoupons = parsed;
+          }
+        } catch (e) {
+          console.warn('Failed parsing enterprise coupons:', e);
+        }
+      }
+      terms = allTerms.filter(t => activeTerms.includes(t.id));
+      if (!activeTerms.includes(state.selectedTerm) && terms.length > 0) {
+        state.selectedTerm = terms[terms.length - 1].id;
+      }
+      setupSlider({ sliderId: 'images-slider', milestonesWrapId: 'images-milestones', valueLabelId: 'images-value', milestones: imageMilestones, stateKey: 'images' });
+      setupSlider({ sliderId: 'videos-slider', milestonesWrapId: 'videos-milestones', valueLabelId: 'videos-value', milestones: videoMilestones, stateKey: 'videos' });
+      refresh();
     }
   }
 
@@ -904,9 +994,29 @@
     const slider = document.getElementById(sliderId);
     const milestonesWrap = document.getElementById(milestonesWrapId);
     const valueLabel = document.getElementById(valueLabelId);
-    const min = Number(slider.min), max = Number(slider.max);
+    if (!slider.getAttribute('data-default-max')) {
+      slider.setAttribute('data-default-max', slider.max);
+    }
+    const getMinMax = () => {
+      const min = Number(slider.min);
+      let max = Number(slider.getAttribute('data-default-max') || slider.max);
+      if (milestones && milestones.length > 0) {
+        const highest = Math.max(...milestones.map(m => m.value));
+        if (highest > max) {
+          max = highest;
+          slider.max = max;
+        } else {
+          slider.max = max;
+        }
+      }
+      return { min, max };
+    };
+
     const THUMB = 18; // must match .ora-slider thumb width
-    const pct = (v) => ((v - min) / (max - min)) * 100;
+    const pct = (v) => {
+      const { min, max } = getMinMax();
+      return ((v - min) / Math.max(1, max - min)) * 100;
+    };
     // Thumb centre is inset by THUMB/2 at each end, so map value -> track pixel position.
     const posLeft = (v) => {
       const p = pct(v);
@@ -1071,12 +1181,12 @@
       (imgMgdTerm > 0 ? `
         <li class="flex items-center justify-between gap-2">
           <span class="flex items-center gap-2">${gearIcon} ORA Design Studio · images</span>
-          <span class="text-gray-200 font-medium tabular-nums">+${money(imgMgdTerm)}</span>
+          <span class="text-gray-200 font-medium tabular-nums">${money(imgMgdTerm)}</span>
         </li>` : '') +
       (vidMgdTerm > 0 ? `
         <li class="flex items-center justify-between gap-2">
           <span class="flex items-center gap-2">${gearIcon} ORA Design Studio · video</span>
-          <span class="text-gray-200 font-medium tabular-nums">+${money(vidMgdTerm)}</span>
+          <span class="text-gray-200 font-medium tabular-nums">${money(vidMgdTerm)}</span>
         </li>` : '');
 
     const customFeaturesHtml = (planFeatures && planFeatures[t.id] ? planFeatures[t.id] : [])
@@ -1107,7 +1217,7 @@
       ? `<span class="absolute -top-2.5 left-6 bg-black border border-neutral-700 px-3 py-0.5 rounded-full shadow-xl z-10"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
       : '';
 
-    const savingsRow = `<div class="text-xs text-gray-400 mt-1.5 font-medium">${t.months === 1 ? 'Pay as you go' : 'Lock in for ' + t.months + ' months'}</div>`;
+    const savingsRow = t.months === 1 ? '' : `<div class="text-xs text-gray-400 mt-1.5 font-medium">Lock in for ${t.months} months</div>`;
 
     const entBadgeHtml = hasEnt
       ? `<div class="mt-4 mb-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-extrabold uppercase tracking-wide shadow-sm">
@@ -1240,6 +1350,12 @@
   // Show live plans from the start (0 images / 0 videos → $0).
   refresh();
   fetchLiveRules();
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'ora_admin_pricing_rules_v2') {
+      fetchLiveRules();
+      refresh();
+    }
+  });
 
   // ===== Enterprise Deal Modal =====
   const entModal = document.getElementById('enterprise-deal-modal');
@@ -1275,18 +1391,73 @@
 
   const applyEnterpriseCode = () => {
     const raw = (entCodeInput.value || '').trim();
-    if (raw.toLowerCase() === 'divi30') {
-      state.enterpriseDiscount = 0.30;
-      state.enterpriseCode = 'Divi30';
-      entMsg.innerHTML = '<span class="inline-flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-sm">✨ Enterprise Deal Code <b>DIVI30</b> Applied — 30% VIP Enterprise Discount Unlocked!</span>';
-    } else if (raw === '') {
+    if (raw === '') {
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
       entMsg.innerHTML = '';
-    } else {
+      renderPlans();
+      return;
+    }
+
+    const found = enterpriseCoupons.find(c => c.active !== false && c.code.toUpperCase() === raw.toUpperCase());
+    if (!found) {
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
-      entMsg.innerHTML = '<span class="text-rose-400">Invalid Enterprise Deal Code. Try code: <b>Divi30</b></span>';
+      entMsg.innerHTML = '<span class="text-rose-400">Invalid Enterprise Deal Code.</span>';
+      renderPlans();
+      return;
+    }
+
+    // Do same calculations as playground to check headroom
+    const it = imageTypes.find(x => x.id === state.imageType);
+    const vt = videoTypes.find(x => x.id === state.videoType);
+    const term = allTerms.find(x => x.id === state.selectedTerm);
+
+    const imgDisc = volumeDiscount(state.images, imageMilestones);
+    const vidDisc = volumeDiscount(state.videos, videoMilestones);
+    const freeCreditBonus = term ? (term.bonusPct || 0) : 0;
+
+    let maxImgSafe = 1;
+    if (it) {
+      const image_base = it.usdPerImage * 100;
+      const image_floor = state.imageType === '1k'
+        ? rockBottomGuardrails.min_usd_per_image_1k
+        : state.imageType === '2k'
+        ? rockBottomGuardrails.min_usd_per_image_2k
+        : rockBottomGuardrails.min_usd_per_image_4k;
+      const effectiveImg = (image_base * (1 - imgDisc)) / (1 + freeCreditBonus);
+      maxImgSafe = effectiveImg > 0 ? Math.max(0, 1 - image_floor / effectiveImg) : 0;
+    }
+
+    let maxVidSafe = 1;
+    if (vt) {
+      const video_base = vt.usdPerSec * 100;
+      const video_floor = state.videoType === '720'
+        ? rockBottomGuardrails.min_usd_per_video_720
+        : state.videoType === '1080'
+        ? (rockBottomGuardrails.min_usd_per_video_1080 || 1050)
+        : (rockBottomGuardrails.min_usd_per_video_4k || 1610);
+      const effectiveVid = (video_base * (1 - vidDisc)) / (1 + freeCreditBonus);
+      maxVidSafe = effectiveVid > 0 ? Math.max(0, 1 - video_floor / effectiveVid) : 0;
+    }
+
+    let maxSafeAllowed = 1;
+    if (state.images > 0 && state.videos > 0) {
+      maxSafeAllowed = Math.min(maxImgSafe, maxVidSafe);
+    } else if (state.images > 0) {
+      maxSafeAllowed = maxImgSafe;
+    } else if (state.videos > 0) {
+      maxSafeAllowed = maxVidSafe;
+    }
+
+    if (found.discount > maxSafeAllowed + 0.0001) {
+      state.enterpriseDiscount = 0;
+      state.enterpriseCode = '';
+      entMsg.innerHTML = `<span class="text-rose-400 font-bold">Not applicable</span>`;
+    } else {
+      state.enterpriseDiscount = found.discount;
+      state.enterpriseCode = found.code;
+      entMsg.innerHTML = `<span class="inline-flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-sm">✨ Enterprise Deal Code <b>${found.code}</b> Applied — ${Math.round(found.discount * 100)}% VIP Enterprise Discount Unlocked!</span>`;
     }
     renderPlans();
   };
