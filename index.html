@@ -401,7 +401,6 @@
     <section class="mt-14">
       <div class="text-center mb-6">
         <h3 class="text-lg font-bold text-gray-100">Other details</h3>
-        <p class="text-sm text-gray-500 mt-1">Credits &amp; per-unit pricing by output quality <span class="text-gray-600">· 1 credit = $0.02</span></p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -418,7 +417,6 @@
               <tr class="text-gray-500 border-b border-white/10">
                 <th class="text-left font-medium pb-2">Quality</th>
                 <th class="text-right font-medium pb-2">Credits / image</th>
-                <th class="text-right font-medium pb-2">Price / image</th>
               </tr>
             </thead>
             <tbody id="details-images"></tbody>
@@ -438,7 +436,6 @@
               <tr class="text-gray-500 border-b border-white/10">
                 <th class="text-left font-medium pb-2">Quality</th>
                 <th class="text-right font-medium pb-2">Credits / sec</th>
-                <th class="text-right font-medium pb-2">Price / 1 sec</th>
               </tr>
             </thead>
             <tbody id="details-videos"></tbody>
@@ -683,6 +680,16 @@
   }
 
   async function fetchLiveRules() {
+    try {
+      const cached = localStorage.getItem('ora_admin_pricing_rules_v2');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && parsed.video_types && parsed.video_types['720'] && parsed.video_types['720'].creditsPerSec <= 25) {
+          localStorage.removeItem('ora_admin_pricing_rules_v2');
+        }
+      }
+    } catch (e) {}
+
     let r = null;
     const urls = ['https://api.oralab.ai/api/pricing-rules', 'http://localhost:3011/api/pricing-rules'];
     for (const url of urls) {
@@ -726,8 +733,10 @@
             if (cfg.usdBase !== undefined) {
               v.usdPerSec = Number(cfg.usdBase) / 100;
               v.usdBase = Number(cfg.usdBase);
+            if (cfg.creditsPerSec !== undefined) {
+              const val = Number(cfg.creditsPerSec);
+              v.credits = val <= 25 ? (key === '720' ? 200 : key === '1080' ? 350 : 650) : val;
             }
-            if (cfg.creditsPerSec !== undefined) v.credits = Number(cfg.creditsPerSec);
           }
         });
       }
@@ -940,13 +949,11 @@
       <tr class="border-b border-white/5 last:border-0">
         <td class="py-2.5 font-semibold text-gray-100">${q.label}</td>
         <td class="py-2.5 text-right tabular-nums text-gray-300">${q.credits.toLocaleString('en-US')}</td>
-        <td class="py-2.5 text-right tabular-nums font-semibold text-gray-100">${money(q.usdPerImage)}</td>
       </tr>`).join('');
     vidBody.innerHTML = videoTypes.map(q => `
       <tr class="border-b border-white/5 last:border-0">
         <td class="py-2.5 font-semibold text-gray-100">${q.label}</td>
         <td class="py-2.5 text-right tabular-nums text-gray-300">${q.credits.toLocaleString('en-US')}</td>
-        <td class="py-2.5 text-right tabular-nums font-semibold text-gray-100">${money(q.usdPerSec)}</td>
       </tr>`).join('');
   }
 
