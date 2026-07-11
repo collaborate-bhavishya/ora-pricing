@@ -680,16 +680,6 @@
   }
 
   async function fetchLiveRules() {
-    try {
-      const cached = localStorage.getItem('ora_admin_pricing_rules_v2');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed && parsed.video_types && parsed.video_types['720'] && parsed.video_types['720'].creditsPerSec <= 25) {
-          localStorage.removeItem('ora_admin_pricing_rules_v2');
-        }
-      }
-    } catch (e) {}
-
     let r = null;
     const urls = ['https://api.oralab.ai/api/pricing-rules', 'http://localhost:3001/api/pricing-rules'];
     for (const url of urls) {
@@ -733,9 +723,9 @@
             if (cfg.usdBase !== undefined) {
               v.usdPerSec = Number(cfg.usdBase) / 100;
               v.usdBase = Number(cfg.usdBase);
+            }
             if (cfg.creditsPerSec !== undefined) {
-              const val = Number(cfg.creditsPerSec);
-              v.credits = val <= 25 ? (key === '720' ? 200 : key === '1080' ? 350 : 650) : val;
+              v.credits = Number(cfg.creditsPerSec);
             }
           }
         });
