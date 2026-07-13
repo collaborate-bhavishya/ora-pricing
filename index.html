@@ -681,11 +681,47 @@
 
   async function fetchLiveRules() {
     let r = null;
-    const urls = ['https://api.oralab.ai/api/pricing-rules', 'http://localhost:3001/api/pricing-rules'];
+    const urls = [
+      'https://api.oralab.ai/api/pricing/catalog',
+      'http://localhost:3001/api/pricing/catalog',
+      'https://api.oralab.ai/api/pricing-rules',
+      'http://localhost:3001/api/pricing-rules',
+    ];
     for (const url of urls) {
       try {
         const res = await fetch(url);
         const data = await res.json();
+        if (res.ok && data.success && data.catalog) {
+          const c = data.catalog;
+          r = {
+            cost_per_credit: c.costPerCreditDisplay,
+            image_types: Object.fromEntries(
+              Object.entries(c.imageTypes || {}).map(([k, v]) => [
+                k,
+                { label: v.label, usdPerImage: v.listPrice, creditsPerImage: v.creditsPerImage },
+              ]),
+            ),
+            video_types: Object.fromEntries(
+              Object.entries(c.videoTypes || {}).map(([k, v]) => [
+                k,
+                { label: v.label, usdBase: v.listPrice, creditsPerSec: v.creditsPerSec },
+              ]),
+            ),
+            clip_lengths: Object.fromEntries(
+              Object.entries(c.clipLengths || {}).map(([k, v]) => [
+                k,
+                { label: v.label, factor: v.factor },
+              ]),
+            ),
+            billing_terms: c.billingTerms,
+            currencies: c.currencies,
+            image_milestones: c.imageMilestones,
+            video_milestones: c.videoMilestones,
+            plan_features: c.planFeatures,
+            active_terms: c.activeTerms,
+          };
+          break;
+        }
         if (res.ok && data.success && data.rules) {
           r = data.rules;
           break;
@@ -844,18 +880,12 @@
         }
       }
       if (r.rock_bottom_guardrails) {
-        rockBottomGuardrails = { ...rockBottomGuardrails, ...r.rock_bottom_guardrails };
+        // Intentionally ignored — floors stay server-side.
       }
       if (r.enterprise_coupons) {
-        try {
-          const parsed = typeof r.enterprise_coupons === 'string' ? JSON.parse(r.enterprise_coupons) : r.enterprise_coupons;
-          if (Array.isArray(parsed)) {
-            enterpriseCoupons = parsed;
-          }
-        } catch (e) {
-          console.warn('Failed parsing enterprise coupons:', e);
-        }
+        // Intentionally ignored — coupon catalog stays server-side.
       }
+      enterpriseCoupons = [];
       terms = allTerms.filter(t => activeTerms.includes(t.id));
       if (!activeTerms.includes(state.selectedTerm) && terms.length > 0) {
         state.selectedTerm = terms[terms.length - 1].id;
@@ -1386,7 +1416,7 @@
     });
   }
 
-  const applyEnterpriseCode = () => {
+  const applyEnterpriseCode = async () => {
     const raw = (entCodeInput.value || '').trim();
     if (raw === '') {
       state.enterpriseDiscount = 0;
@@ -1396,8 +1426,38 @@
       return;
     }
 
-    const found = enterpriseCoupons.find(c => c.active !== false && c.code.toUpperCase() === raw.toUpperCase());
-    if (!found) {
+    const quoteUrls = [
+      'https://api.oralab.ai/api/pricing/quote',
+      'http://localhost:3001/api/pricing/quote',
+    ];
+    let quote = null;
+    for (const url of quoteUrls) {
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            images: state.images,
+            imageType: state.imageType,
+            videos: state.videos,
+            videoType: state.videoType,
+            clipLength: state.clip,
+            termId: state.selectedTerm,
+            couponCode: raw,
+            currency: 'INR',
+            imgManaged: state.imgManaged,
+            vidManaged: state.vidManaged,
+          }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success && data.quote) {
+          quote = data.quote;
+          break;
+        }
+      } catch (e) { /* try next */ }
+    }
+
+    if (!quote || !quote.discounts?.couponApplied) {
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
       entMsg.innerHTML = '<span class="text-rose-400">Invalid Enterprise Deal Code.</span>';
@@ -1405,57 +1465,17 @@
       return;
     }
 
-    // Do same calculations as playground to check headroom
-    const it = imageTypes.find(x => x.id === state.imageType);
-    const vt = videoTypes.find(x => x.id === state.videoType);
-    const term = allTerms.find(x => x.id === state.selectedTerm);
-
-    const imgDisc = volumeDiscount(state.images, imageMilestones);
-    const vidDisc = volumeDiscount(state.videos, videoMilestones);
-    const freeCreditBonus = term ? (term.bonusPct || 0) : 0;
-
-    let maxImgSafe = 1;
-    if (it) {
-      const image_base = it.usdPerImage * 100;
-      const image_floor = state.imageType === '1k'
-        ? rockBottomGuardrails.min_usd_per_image_1k
-        : state.imageType === '2k'
-        ? rockBottomGuardrails.min_usd_per_image_2k
-        : rockBottomGuardrails.min_usd_per_image_4k;
-      const effectiveImg = (image_base * (1 - imgDisc)) / (1 + freeCreditBonus);
-      maxImgSafe = effectiveImg > 0 ? Math.max(0, 1 - image_floor / effectiveImg) : 0;
-    }
-
-    let maxVidSafe = 1;
-    if (vt) {
-      const video_base = vt.usdPerSec * 100;
-      const video_floor = state.videoType === '720'
-        ? rockBottomGuardrails.min_usd_per_video_720
-        : state.videoType === '1080'
-        ? (rockBottomGuardrails.min_usd_per_video_1080 || 1050)
-        : (rockBottomGuardrails.min_usd_per_video_4k || 1610);
-      const effectiveVid = (video_base * (1 - vidDisc)) / (1 + freeCreditBonus);
-      maxVidSafe = effectiveVid > 0 ? Math.max(0, 1 - video_floor / effectiveVid) : 0;
-    }
-
-    let maxSafeAllowed = 1;
-    if (state.images > 0 && state.videos > 0) {
-      maxSafeAllowed = Math.min(maxImgSafe, maxVidSafe);
-    } else if (state.images > 0) {
-      maxSafeAllowed = maxImgSafe;
-    } else if (state.videos > 0) {
-      maxSafeAllowed = maxVidSafe;
-    }
-
-    if (found.discount > maxSafeAllowed + 0.0001) {
+    if (quote.warnings && quote.warnings.length) {
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
       entMsg.innerHTML = `<span class="text-rose-400 font-bold">Not applicable</span>`;
-    } else {
-      state.enterpriseDiscount = found.discount;
-      state.enterpriseCode = found.code;
-      entMsg.innerHTML = `<span class="inline-flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-sm">✨ Enterprise Deal Code <b>${found.code}</b> Applied — ${Math.round(found.discount * 100)}% VIP Enterprise Discount Unlocked!</span>`;
+      renderPlans();
+      return;
     }
+
+    state.enterpriseDiscount = Number(quote.discounts.couponPct) || 0;
+    state.enterpriseCode = raw.toUpperCase();
+    entMsg.innerHTML = `<span class="inline-flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-sm">✨ Enterprise Deal Code <b>${state.enterpriseCode}</b> Applied — ${Math.round(state.enterpriseDiscount * 100)}% VIP Enterprise Discount Unlocked!</span>`;
     renderPlans();
   };
 
