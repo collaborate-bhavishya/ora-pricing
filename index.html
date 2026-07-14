@@ -1338,7 +1338,7 @@
     if (t.months === 1) {
       monthlyDisplay = 'Billed monthly';
     } else {
-      monthlyDisplay = `<span class="font-bold text-gray-400">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
+      monthlyDisplay = `<span class="font-bold text-gray-400">${money(perMonth)}</span> / month`;
     }
 
     card.innerHTML = `
