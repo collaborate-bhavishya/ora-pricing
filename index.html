@@ -351,6 +351,11 @@
         <p class="text-xs text-gray-500 mt-1">Select a commitment term to view plans and discounts</p>
       </div>
 
+      <!-- Column headers above the cards grid (hidden on mobile) -->
+      <div id="plans-grid-headers" class="hidden sm:grid grid-cols-3 gap-6 sm:gap-8 mb-6 text-center items-end select-none">
+        <!-- populated by JS -->
+      </div>
+
       <div id="plans-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"></div>
 
       <!-- Enterprise Deal Clickable Line -->
@@ -547,6 +552,11 @@
       <div class="text-center mb-6 mt-8">
         <h2 class="text-2xl font-black text-white tracking-tight">Pricing Plans</h2>
         <p class="text-xs text-gray-500 mt-1">Select a commitment term to view plans and discounts</p>
+      </div>
+
+      <!-- Column headers above the enterprise grid (hidden on mobile) -->
+      <div id="enterprise-plans-grid-headers" class="hidden sm:grid grid-cols-3 gap-6 sm:gap-8 mb-6 text-center items-end select-none">
+        <!-- populated by JS -->
       </div>
 
       <div id="enterprise-plans-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"></div>
@@ -1185,8 +1195,33 @@
     const vt = videoTypes.find(x => x.id === state.videoType);
     const cl = clipLengths.find(x => x.id === state.clip);
 
+    const mainHeaders = document.getElementById('plans-grid-headers');
+    const entHeaders = document.getElementById('enterprise-plans-grid-headers');
     const mainGrid = document.getElementById('plans-grid');
     const entGrid = document.getElementById('enterprise-plans-grid');
+
+    const populateHeaders = (wrap) => {
+      if (!wrap) return;
+      wrap.innerHTML = '';
+      activeTerms.forEach(termId => {
+        const t = terms.find(x => x.id === termId);
+        if (!t) return;
+        const col = document.createElement('div');
+        col.className = 'text-center flex flex-col items-center justify-center';
+        const badgeHtml = t.best
+          ? `<span class="inline-block bg-black border border-neutral-700 px-2 py-0.5 rounded-full shadow-md mt-1"><span class="text-[9px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
+          : '';
+        col.innerHTML = `
+          <div class="text-base font-black text-gray-200 uppercase tracking-wider leading-none">${t.label.replace(' Plan', '')}</div>
+          ${badgeHtml}
+        `;
+        wrap.appendChild(col);
+      });
+    };
+
+    if (mainHeaders) populateHeaders(mainHeaders);
+    if (entHeaders) populateHeaders(entHeaders);
+
     if (mainGrid) mainGrid.innerHTML = '';
     if (entGrid) entGrid.innerHTML = '';
 
@@ -1309,8 +1344,8 @@
     }
 
     card.innerHTML = `
-      ${badge}
-      <div class="text-base font-bold text-gray-100">${t.label}</div>
+      <div class="sm:hidden">${badge}</div>
+      <div class="sm:hidden text-base font-bold text-gray-100 mb-1">${t.label}</div>
       ${savingsRow}
       ${priceSectionHtml}
       <div class="text-xs mt-2 font-medium text-gray-400">${monthlyDisplay}</div>
