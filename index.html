@@ -1287,14 +1287,20 @@
 
     const managedLines =
       (imgMgdTerm > 0 ? `
-        <li class="flex items-center justify-between gap-2">
-          <span class="flex items-center gap-2">${gearIcon} ORA Design Studio · images</span>
-          <span class="text-gray-200 font-medium tabular-nums">${money(imgMgdTerm)}</span>
+        <li class="flex items-center justify-between gap-3 py-1">
+          <div class="flex items-center gap-1.5 pt-0.5">
+            ${gearIcon}
+            <span class="text-gray-200 font-medium">ORA Design Studio · images</span>
+          </div>
+          <div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(imgMgdTerm)}</div>
         </li>` : '') +
       (vidMgdTerm > 0 ? `
-        <li class="flex items-center justify-between gap-2">
-          <span class="flex items-center gap-2">${gearIcon} ORA Design Studio · video</span>
-          <span class="text-gray-200 font-medium tabular-nums">${money(vidMgdTerm)}</span>
+        <li class="flex items-center justify-between gap-3 py-1">
+          <div class="flex items-center gap-1.5 pt-0.5">
+            ${gearIcon}
+            <span class="text-gray-200 font-medium">ORA Design Studio · video</span>
+          </div>
+          <div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(vidMgdTerm)}</div>
         </li>` : '');
 
     const customFeaturesHtml = (planFeatures && planFeatures[t.id] ? planFeatures[t.id] : [])
@@ -1433,6 +1439,7 @@
           </div>
           ${vidPriceDisplay}
         </li>
+        ${managedLines}
       </ul>`;
       })()}
 
