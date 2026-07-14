@@ -1333,14 +1333,14 @@
         const rawVidTerm = state.videos * base.vidUnit * factor;
 
         const imgDiscBadge = base.imgDisc > 0
-          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">-${Math.round(base.imgDisc * 100)}%</span>`
+          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-blue-500/15 text-blue-300 border border-blue-500/30">-${Math.round(base.imgDisc * 100)}%</span>`
           : '';
         const imgPriceDisplay = base.imgDisc > 0
           ? `<div class="text-right shrink-0"><div class="flex items-center justify-end gap-1.5">${imgDiscBadge}<span class="text-[11px] text-gray-500 line-through leading-none">${money(hasEnt ? rawImgTerm * (1 - state.enterpriseDiscount) : rawImgTerm)}</span></div><div class="text-sm font-bold text-white leading-tight mt-0.5">${money(hasEnt ? imgTerm * (1 - state.enterpriseDiscount) : imgTerm)}</div></div>`
           : `<div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(hasEnt ? imgTerm * (1 - state.enterpriseDiscount) : imgTerm)}</div>`;
 
         const vidDiscBadge = base.vidDisc > 0
-          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">-${Math.round(base.vidDisc * 100)}%</span>`
+          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-purple-500/15 text-purple-300 border border-purple-500/30">-${Math.round(base.vidDisc * 100)}%</span>`
           : '';
         const vidPriceDisplay = base.vidDisc > 0
           ? `<div class="text-right shrink-0"><div class="flex items-center justify-end gap-1.5">${vidDiscBadge}<span class="text-[11px] text-gray-500 line-through leading-none">${money(hasEnt ? rawVidTerm * (1 - state.enterpriseDiscount) : rawVidTerm)}</span></div><div class="text-sm font-bold text-white leading-tight mt-0.5">${money(hasEnt ? vidTerm * (1 - state.enterpriseDiscount) : vidTerm)}</div></div>`
