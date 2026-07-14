@@ -1287,7 +1287,7 @@
     if (t.months === 1) {
       monthlyDisplay = 'Billed monthly';
     } else {
-      monthlyDisplay = `<span class="font-bold text-white">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
+      monthlyDisplay = `<span class="font-bold text-gray-400">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
     }
 
     card.innerHTML = `
@@ -1295,7 +1295,7 @@
       <div class="text-base font-bold text-gray-100">${t.label}</div>
       ${savingsRow}
       ${priceSectionHtml}
-      <div class="text-xs mt-2 font-medium ${t.months === 1 ? 'text-gray-500' : 'text-gray-300'}">${monthlyDisplay}</div>
+      <div class="text-xs mt-2 font-medium text-gray-400">${monthlyDisplay}</div>
 
       <div class="mt-5 pt-4 pb-3 border-t border-white/10 flex items-center justify-between gap-1 text-xs">
         <span class="font-medium text-white/90 flex items-center gap-1.5 text-xs sm:text-[13px]">
