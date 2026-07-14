@@ -541,14 +541,13 @@
           Enterprise Deal Portal
         </span>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Unlock Enterprise Contract Pricing</h3>
-        <p class="text-sm text-gray-400 mt-1">Enter your official Enterprise Deal Code below to slash pricing across your billing terms.</p>
 
         <!-- Code Input Bar -->
         <div class="mt-5 max-w-md mx-auto flex flex-col sm:flex-row items-center gap-2.5">
           <input
             type="text"
             id="enterprise-code-input"
-            placeholder="Enter Deal Code (e.g. Divi30)"
+            placeholder="Enter deal code"
             class="w-full px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-700 focus:border-brand text-white placeholder-gray-500 font-bold text-center sm:text-left outline-none transition-all shadow-inner uppercase tracking-wide"
           />
           <button
@@ -1340,12 +1339,7 @@
           <span>-${Math.round(base.vidDisc * 100)}%</span>
         </span>`;
     }
-    if (hasEnt) {
-      badgesHtml += `
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-extrabold uppercase tracking-wide shadow-sm">
-          <span>DIVI30 APPLIED (-30% ENTERPRISE DEAL)</span>
-        </span>`;
-    }
+
 
     const priceSectionHtml = (hasMilestone || hasEnt)
       ? `<div class="mt-4 mb-2 flex flex-wrap gap-1.5">${badgesHtml}</div>
@@ -1406,29 +1400,36 @@
           ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-blue-500/15 text-blue-300 border border-blue-500/30">-${Math.round(base.imgDisc * 100)}%</span>`
           : '';
         const imgPriceDisplay = base.imgDisc > 0
-          ? `<div class="text-right shrink-0"><div class="flex items-center justify-end gap-1.5">${imgDiscBadge}<span class="text-[11px] text-gray-500 line-through leading-none">${money(hasEnt ? rawImgTerm * (1 - state.enterpriseDiscount) : rawImgTerm)}</span></div><div class="text-sm font-bold text-white leading-tight mt-0.5">${money(hasEnt ? imgTerm * (1 - state.enterpriseDiscount) : imgTerm)}</div></div>`
-          : `<div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(hasEnt ? imgTerm * (1 - state.enterpriseDiscount) : imgTerm)}</div>`;
+          ? `<div class="text-right shrink-0"><div class="flex items-center justify-end gap-1.5">${imgDiscBadge}<span class="text-[11px] text-gray-500 line-through leading-none">${money(rawImgTerm)}</span></div><div class="text-sm font-bold text-white leading-tight mt-0.5">${money(imgTerm)}</div></div>`
+          : `<div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(imgTerm)}</div>`;
 
         const vidDiscBadge = base.vidDisc > 0
           ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-purple-500/15 text-purple-300 border border-purple-500/30">-${Math.round(base.vidDisc * 100)}%</span>`
           : '';
         const vidPriceDisplay = base.vidDisc > 0
-          ? `<div class="text-right shrink-0"><div class="flex items-center justify-end gap-1.5">${vidDiscBadge}<span class="text-[11px] text-gray-500 line-through leading-none">${money(hasEnt ? rawVidTerm * (1 - state.enterpriseDiscount) : rawVidTerm)}</span></div><div class="text-sm font-bold text-white leading-tight mt-0.5">${money(hasEnt ? vidTerm * (1 - state.enterpriseDiscount) : vidTerm)}</div></div>`
-          : `<div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(hasEnt ? vidTerm * (1 - state.enterpriseDiscount) : vidTerm)}</div>`;
+          ? `<div class="text-right shrink-0"><div class="flex items-center justify-end gap-1.5">${vidDiscBadge}<span class="text-[11px] text-gray-500 line-through leading-none">${money(rawVidTerm)}</span></div><div class="text-sm font-bold text-white leading-tight mt-0.5">${money(vidTerm)}</div></div>`
+          : `<div class="text-right shrink-0 text-white font-semibold tabular-nums">${money(vidTerm)}</div>`;
+
+        const entBadgeHtml = hasEnt
+          ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[10px] font-black leading-none ml-1.5 select-none">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+               <span>-${Math.round(state.enterpriseDiscount * 100)}%</span>
+             </span>`
+          : '';
 
         return `
       <ul class="space-y-3.5 text-xs sm:text-[13px] text-gray-300 flex-1 my-2">
         <li class="flex items-center justify-between gap-3 py-1">
           <div class="flex items-center gap-1.5 pt-0.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 shrink-0"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-4.5-4.5L5.5 21.5"/></svg>
-            <span class="text-gray-200 font-medium">${state.images.toLocaleString('en-US')} × ${it.label} images</span>
+            <span class="text-gray-200 font-medium">${state.images.toLocaleString('en-US')} × ${it.label} images</span>${entBadgeHtml}
           </div>
           ${imgPriceDisplay}
         </li>
         <li class="flex items-center justify-between gap-3 py-1">
           <div class="flex items-center gap-1.5 pt-0.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 shrink-0"><rect x="2.5" y="5" width="15" height="14" rx="2.5"/><path d="M17.5 10l4-2.2v8.4l-4-2.2z"/></svg>
-            <span class="text-gray-200 font-medium">${state.videos.toLocaleString('en-US')} × ${vt.label} · ${cl.label}</span>
+            <span class="text-gray-200 font-medium">${state.videos.toLocaleString('en-US')} × ${vt.label} · ${cl.label}</span>${entBadgeHtml}
           </div>
           ${vidPriceDisplay}
         </li>
