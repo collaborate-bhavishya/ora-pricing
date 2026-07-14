@@ -1365,8 +1365,8 @@
           ${vidPriceDisplay}
         </li>`;
       })()}
-        ${managedLines}
-        ${customFeaturesHtml}
+        ${isEnterpriseGrid ? '' : managedLines}
+        ${isEnterpriseGrid ? '' : customFeaturesHtml}
       </ul>
 
       <button data-term="${t.id}" class="mt-8 w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm active:scale-[0.98] transition-all shadow-lg cursor-pointer ${
