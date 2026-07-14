@@ -673,7 +673,7 @@
         ${activeTerms.includes('monthly') ? `<th class="pb-3.5 font-semibold text-center w-2/9">1 Month Plan</th>` : ''}
         ${activeTerms.includes('quarterly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">3 Months</th>` : ''}
         ${activeTerms.includes('six_month') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-purple-400">6 Months</th>` : ''}
-        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white relative pr-4"><span>12 Months</span><span class="absolute top-0 right-1.5 bg-black border border-neutral-700 px-1.5 py-0.5 rounded-full shadow-md select-none transform -translate-y-1"><span class="text-[8px] font-extrabold uppercase tracking-wider gradient-text-best block leading-none">Best value</span></span></th>` : ''}
+        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white relative pr-4"><span>12 Months</span><span class="absolute top-0 right-1.5 bg-emerald-950 border border-emerald-500/35 px-1.5 py-0.5 rounded-full shadow-md select-none transform -translate-y-1"><span class="text-[8px] font-extrabold uppercase tracking-wider text-emerald-400 block leading-none">Best value</span></span></th>` : ''}
       `;
     }
     const tbody = document.getElementById('comparison-tbody');
@@ -1209,7 +1209,7 @@
         const col = document.createElement('div');
         col.className = 'text-center flex flex-col items-center justify-end relative pb-2';
         const badgeHtml = t.best
-          ? `<span class="inline-block bg-black border border-neutral-700 px-2 py-0.5 rounded-full shadow-md mb-2"><span class="text-[9px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
+          ? `<span class="inline-block bg-emerald-950 border border-emerald-500/35 px-2 py-0.5 rounded-full shadow-md mb-2"><span class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-400 block">Best value</span></span>`
           : '';
         const lockInHtml = t.months > 1
           ? `<div class="text-[11px] text-gray-500 font-semibold mt-1">Lock in for ${t.months} months</div>`
@@ -1299,7 +1299,7 @@
     const totalTermCredits = baseTermCredits + freeCredits;
 
     const badge = t.best
-      ? `<span class="absolute -top-2.5 left-6 bg-black border border-neutral-700 px-3 py-0.5 rounded-full shadow-xl z-10"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
+      ? `<span class="absolute -top-2.5 left-6 bg-emerald-950 border border-emerald-500/35 px-3 py-0.5 rounded-full shadow-xl z-10"><span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block">Best value</span></span>`
       : '';
 
     const savingsRow = t.months === 1 ? '' : `<div class="text-xs text-gray-400 mt-1.5 font-medium">Lock in for ${t.months} months</div>`;
