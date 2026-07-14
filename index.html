@@ -806,7 +806,11 @@
       if (r.active_terms) {
         try {
           const parsed = typeof r.active_terms === 'string' ? JSON.parse(r.active_terms) : r.active_terms;
-          if (Array.isArray(parsed) && parsed.length > 0) activeTerms = parsed.filter(x => x !== 'monthly');
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const allowed = parsed.filter(x => x !== 'monthly');
+            const chronologicalOrder = ['quarterly', 'six_month', 'yearly'];
+            activeTerms = chronologicalOrder.filter(x => allowed.includes(x));
+          }
         } catch (e) {
           console.warn('Failed parsing active terms:', e);
         }
