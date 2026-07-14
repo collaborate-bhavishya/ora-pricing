@@ -1285,19 +1285,9 @@
 
     let monthlyDisplay = '';
     if (t.months === 1) {
-      if (hasMilestone) {
-        monthlyDisplay = `<span class="line-through text-gray-500 mr-1">${money(monthlyRawTotal)}/mo</span> <span class="font-bold text-emerald-400">${money(perMonth)}</span> / month`;
-      } else {
-        monthlyDisplay = 'Billed monthly';
-      }
+      monthlyDisplay = 'Billed monthly';
     } else {
-      if (hasEnt) {
-        monthlyDisplay = `<span class="line-through text-gray-500 mr-1">${money(monthlyRawTotal)}/mo</span> <span class="font-bold text-amber-400">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
-      } else if (hasMilestone) {
-        monthlyDisplay = `<span class="line-through text-gray-500 mr-1">${money(monthlyRawTotal)}/mo</span> <span class="font-bold text-emerald-400">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
-      } else {
-        monthlyDisplay = `<span class="font-bold text-white">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
-      }
+      monthlyDisplay = `<span class="font-bold text-white">${money(perMonth)}</span> / month · ${t.billed || 'billed every ' + t.months + ' months'}`;
     }
 
     card.innerHTML = `
