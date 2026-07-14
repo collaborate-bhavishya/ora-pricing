@@ -673,7 +673,7 @@
         ${activeTerms.includes('monthly') ? `<th class="pb-3.5 font-semibold text-center w-2/9">1 Month Plan</th>` : ''}
         ${activeTerms.includes('quarterly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">3 Months</th>` : ''}
         ${activeTerms.includes('six_month') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-purple-400">6 Months</th>` : ''}
-        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white">12 Months</th>` : ''}
+        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white relative pr-4"><span>12 Months</span><span class="absolute top-0 right-1.5 bg-black border border-neutral-700 px-1.5 py-0.5 rounded-full shadow-md select-none transform -translate-y-1"><span class="text-[8px] font-extrabold uppercase tracking-wider gradient-text-best block leading-none">Best value</span></span></th>` : ''}
       `;
     }
     const tbody = document.getElementById('comparison-tbody');
@@ -1207,13 +1207,17 @@
         const t = terms.find(x => x.id === termId);
         if (!t) return;
         const col = document.createElement('div');
-        col.className = 'text-center flex flex-col items-center justify-center';
+        col.className = 'text-center flex flex-col items-center justify-end relative pb-2';
         const badgeHtml = t.best
-          ? `<span class="inline-block bg-black border border-neutral-700 px-2 py-0.5 rounded-full shadow-md mt-1"><span class="text-[9px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
+          ? `<span class="inline-block bg-black border border-neutral-700 px-2 py-0.5 rounded-full shadow-md mb-2"><span class="text-[9px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
+          : '';
+        const lockInHtml = t.months > 1
+          ? `<div class="text-[11px] text-gray-500 font-semibold mt-1">Lock in for ${t.months} months</div>`
           : '';
         col.innerHTML = `
-          <div class="text-base font-black text-gray-200 uppercase tracking-wider leading-none">${t.label.replace(' Plan', '')}</div>
           ${badgeHtml}
+          <div class="text-base font-black text-gray-200 uppercase tracking-wider leading-none">${t.label.replace(' Plan', '')}</div>
+          ${lockInHtml}
         `;
         wrap.appendChild(col);
       });
@@ -1346,7 +1350,7 @@
     card.innerHTML = `
       <div class="sm:hidden">${badge}</div>
       <div class="sm:hidden text-base font-bold text-gray-100 mb-1">${t.label}</div>
-      ${savingsRow}
+      <div class="sm:hidden">${savingsRow}</div>
       ${priceSectionHtml}
       <div class="text-xs mt-2 font-medium text-gray-400">${monthlyDisplay}</div>
 
