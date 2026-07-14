@@ -1102,25 +1102,26 @@
     function renderMilestoneDots() {
       milestonesWrap.innerHTML = '';
       const cur = Number(slider.value);
+      console.log('Rendering milestones for ' + stateKey + ':', milestones);
       milestones.forEach(m => {
         const reached = cur >= m.value;
 
         // subtle marker sitting on the track line
         const dot = document.createElement('span');
-        dot.className = `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full ring-2 ring-neutral-900 ${reached ? 'bg-white' : 'bg-neutral-500'}`;
+        dot.className = `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full ring-2 ring-neutral-950 ${reached ? 'bg-white' : 'bg-neutral-600'} milestone-dot`;
         dot.style.left = posLeft(m.value);
         milestonesWrap.appendChild(dot);
 
         // clickable label + discount chip clearly below the line
         const label = document.createElement('button');
         label.type = 'button';
-        label.className = 'absolute -translate-x-1/2 top-[22px] flex flex-col items-center gap-1 pointer-events-auto';
+        label.className = 'absolute -translate-x-1/2 top-[22px] flex flex-col items-center gap-1 pointer-events-auto cursor-pointer';
         label.style.left = posLeft(m.value);
         label.innerHTML = `
-          <span class="text-[11px] font-semibold leading-none ${reached ? 'text-gray-200' : 'text-gray-500'}">${m.value.toLocaleString('en-US')}</span>
+          <span class="text-[11px] leading-none ${reached ? 'text-white font-extrabold' : 'text-gray-400 font-semibold'}">${m.value.toLocaleString('en-US')}</span>
           ${m.discount > 0 ? `<span class="text-[9px] font-bold leading-none px-1.5 py-0.5 rounded-full whitespace-nowrap ${
-            reached ? 'text-emerald-300 bg-emerald-500/15 border border-emerald-400/30'
-                    : 'text-emerald-400/60 bg-emerald-500/5 border border-emerald-400/15'
+            reached ? 'text-emerald-300 bg-emerald-500/20 border border-emerald-400/40 font-extrabold shadow-sm'
+                    : 'text-emerald-400/80 bg-emerald-500/10 border border-emerald-500/25'
           }">-${Math.round(m.discount * 100)}%</span>` : ''}
         `;
         label.addEventListener('click', () => { slider.value = m.value; slider.dispatchEvent(new Event('input')); });
