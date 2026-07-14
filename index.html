@@ -125,8 +125,28 @@
   input[type="range"].ora-slider::-webkit-slider-runnable-track { height: 6px; border-radius: 9999px; }
   input[type="range"].ora-slider::-moz-range-track { height: 6px; border-radius: 9999px; background: transparent; }
 
-  .milestone-dot { transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; }
+   .milestone-dot { transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; }
   .milestone-dot:hover { transform: translate(-50%, -50%) scale(1.15); }
+
+  /* Blue slider overrides */
+  input[type="range"].slider-blue::-webkit-slider-thumb {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15) !important;
+  }
+  input[type="range"].slider-blue::-moz-range-thumb {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15) !important;
+  }
+
+  /* Purple slider overrides */
+  input[type="range"].slider-purple::-webkit-slider-thumb {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 4px rgba(168,85,247,0.15) !important;
+  }
+  input[type="range"].slider-purple::-moz-range-thumb {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 4px rgba(168,85,247,0.15) !important;
+  }
 
   /* Hide up/down arrows in number inputs */
   input[type="number"]::-webkit-inner-spin-button,
@@ -218,9 +238,9 @@
 
       <!-- ===== IMAGES ===== -->
       <section class="glass glass-sheen relative rounded-2xl p-5 sm:p-6 overflow-hidden">
-        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-brand/60 via-brand/20 to-transparent"></div>
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-blue-500/60 via-blue-500/20 to-transparent"></div>
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-xl bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/25 text-blue-400 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
               <rect x="3" y="3" width="18" height="18" rx="2.5"/>
               <circle cx="8.5" cy="8.5" r="1.6"/>
@@ -231,7 +251,7 @@
             <h3 class="text-base font-bold text-gray-100 leading-tight">Images</h3>
             <p class="text-xs text-gray-500">Still image generation</p>
           </div>
-          <span class="ml-auto text-[10px] font-semibold uppercase tracking-wide text-brand-400 bg-brand/10 border border-brand/20 rounded-full px-2 py-0.5 shrink-0">Monthly</span>
+          <span class="ml-auto text-[10px] font-semibold uppercase tracking-wide text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full px-2 py-0.5 shrink-0">Monthly</span>
         </div>
 
         <div class="space-y-6">
@@ -249,13 +269,13 @@
                 min="0"
                 max="500"
                 step="1"
-                class="w-24 sm:w-28 px-2.5 py-1 bg-neutral-900/90 border border-brand/40 hover:border-brand/70 focus:border-brand focus:ring-2 focus:ring-brand/30 rounded-lg text-right text-lg font-extrabold tabular-nums text-white outline-none transition-all shadow-inner"
+                class="w-24 sm:w-28 px-2.5 py-1 bg-neutral-900/90 border border-blue-500/40 hover:border-blue-500/70 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 rounded-lg text-right text-lg font-extrabold tabular-nums text-white outline-none transition-all shadow-inner"
                 value="0"
               />
             </div>
             <div class="relative pt-2 pb-10">
               <div class="relative" id="images-sliderrow">
-                <input type="range" id="images-slider" class="ora-slider" min="0" max="500" step="10" value="0" />
+                <input type="range" id="images-slider" class="ora-slider slider-blue" min="0" max="500" step="10" value="0" />
                 <div class="absolute inset-0 pointer-events-none" id="images-milestones"></div>
               </div>
             </div>
@@ -269,7 +289,7 @@
             </label>
             <div class="pt-2">
               <div class="text-sm font-medium text-gray-400">Credits needed / month</div>
-              <div class="text-3xl font-extrabold tabular-nums credit-gradient mt-1.5" id="images-credits">0</div>
+              <div class="text-3xl font-extrabold tabular-nums text-blue-400 mt-1.5" id="images-credits">0</div>
             </div>
           </div>
         </div>
@@ -277,9 +297,9 @@
 
       <!-- ===== VIDEO ===== -->
       <section class="glass glass-sheen relative rounded-2xl p-5 sm:p-6 overflow-hidden">
-        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-brand/60 via-brand/20 to-transparent"></div>
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-purple-500/60 via-purple-500/20 to-transparent"></div>
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-xl bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/25 text-purple-400 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
               <rect x="2.5" y="5" width="15" height="14" rx="2.5"/>
               <path d="M17.5 10l4-2.2v8.4l-4-2.2z"/>
@@ -290,7 +310,7 @@
             <h3 class="text-base font-bold text-gray-100 leading-tight">Video</h3>
             <p class="text-xs text-gray-500">Motion / video generation</p>
           </div>
-          <span class="ml-auto text-[10px] font-semibold uppercase tracking-wide text-brand-400 bg-brand/10 border border-brand/20 rounded-full px-2 py-0.5 shrink-0">Monthly</span>
+          <span class="ml-auto text-[10px] font-semibold uppercase tracking-wide text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-full px-2 py-0.5 shrink-0">Monthly</span>
         </div>
 
         <div class="space-y-6">
@@ -316,13 +336,13 @@
                 min="0"
                 max="50"
                 step="1"
-                class="w-24 sm:w-28 px-2.5 py-1 bg-neutral-900/90 border border-brand/40 hover:border-brand/70 focus:border-brand focus:ring-2 focus:ring-brand/30 rounded-lg text-right text-lg font-extrabold tabular-nums text-white outline-none transition-all shadow-inner"
+                class="w-24 sm:w-28 px-2.5 py-1 bg-neutral-900/90 border border-purple-500/40 hover:border-purple-500/70 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 rounded-lg text-right text-lg font-extrabold tabular-nums text-white outline-none transition-all shadow-inner"
                 value="0"
               />
             </div>
             <div class="relative pt-2 pb-10">
               <div class="relative" id="videos-sliderrow">
-                <input type="range" id="videos-slider" class="ora-slider" min="0" max="50" step="5" value="0" />
+                <input type="range" id="videos-slider" class="ora-slider slider-purple" min="0" max="50" step="5" value="0" />
                 <div class="absolute inset-0 pointer-events-none" id="videos-milestones"></div>
               </div>
             </div>
@@ -336,7 +356,7 @@
             </label>
             <div class="pt-2">
               <div class="text-sm font-medium text-gray-400">Credits needed / month</div>
-              <div class="text-3xl font-extrabold tabular-nums credit-gradient mt-1.5" id="videos-credits">0</div>
+              <div class="text-3xl font-extrabold tabular-nums text-purple-400 mt-1.5" id="videos-credits">0</div>
             </div>
           </div>
         </div>
@@ -1004,33 +1024,45 @@
   }
 
   // ===== Generic pill group =====
-  function renderPills(wrap, items, size) {
+  function renderPills(wrap, items, size, color) {
     wrap.innerHTML = '';
     items.forEach(it => {
       const active = wrap._selected() === it.id;
       const btn = document.createElement('button');
       btn.type = 'button';
+
+      let activeClass = '';
+      let subClassActive = '';
+      if (color === 'blue') {
+        activeClass = 'border-blue-500 bg-blue-500/10 ring-1 ring-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.25)]';
+        subClassActive = 'text-blue-300';
+      } else if (color === 'purple') {
+        activeClass = 'border-purple-500 bg-purple-500/10 ring-1 ring-purple-500/40 shadow-[0_0_12px_rgba(168,85,247,0.25)]';
+        subClassActive = 'text-purple-300';
+      } else {
+        activeClass = 'border-brand bg-brand/15 ring-1 ring-brand shadow-[0_0_12px_rgba(59,130,246,0.25)]';
+        subClassActive = 'text-brand-300';
+      }
+
       btn.className = [
-        'rounded-lg border transition-all active:scale-[0.98] text-center',
+        'rounded-lg border transition-all active:scale-[0.98] text-center cursor-pointer',
         size === 'sm' ? 'px-2 py-1.5' : 'px-3 py-2',
-        active
-          ? 'border-brand bg-brand/15 ring-1 ring-brand shadow-[0_0_12px_rgba(59,130,246,0.25)]'
-          : 'border-surface-border bg-neutral-800/30 hover:border-neutral-700',
+        active ? activeClass : 'border-surface-border bg-neutral-800/30 hover:border-neutral-700',
       ].join(' ');
       btn.innerHTML = `
         <span class="block text-sm ${active ? 'text-white font-bold' : 'text-gray-100 font-semibold'}">${it.label}</span>
-        ${it.sub ? `<span class="block text-[10px] mt-0.5 ${active ? 'text-brand-300' : 'text-gray-500'}">${it.sub}</span>` : ''}
+        ${it.sub ? `<span class="block text-[10px] mt-0.5 ${active ? subClassActive : 'text-gray-500'}">${it.sub}</span>` : ''}
       `;
       btn.addEventListener('click', () => wrap._onSelect(it.id));
       wrap.appendChild(btn);
     });
   }
 
-  function setupPills(id, items, selectedGetter, onSelect, size) {
+  function setupPills(id, items, selectedGetter, onSelect, size, color) {
     const wrap = document.getElementById(id);
     wrap._selected = selectedGetter;
-    wrap._onSelect = (val) => { onSelect(val); renderPills(wrap, items, size); };
-    renderPills(wrap, items, size);
+    wrap._onSelect = (val) => { onSelect(val); renderPills(wrap, items, size, color); };
+    renderPills(wrap, items, size, color);
     return wrap;
   }
 
@@ -1070,7 +1102,8 @@
 
     function paintTrack() {
       const stop = posLeft(Number(slider.value));
-      slider.style.background = `linear-gradient(to right, #6366f1 0%, #6366f1 ${stop}, #262626 ${stop}, #262626 100%)`;
+      const trackColor = stateKey === 'images' ? '#3b82f6' : '#a855f7';
+      slider.style.background = `linear-gradient(to right, ${trackColor} 0%, ${trackColor} ${stop}, #262626 ${stop}, #262626 100%)`;
     }
 
     function renderMilestoneDots() {
@@ -1424,9 +1457,9 @@
 
   // ===== Init =====
   renderCurrency();
-  setupPills('image-type', imageTypes, () => state.imageType, v => { state.imageType = v; refresh(); }, 'md');
-  setupPills('video-type', videoTypes, () => state.videoType, v => { state.videoType = v; refresh(); }, 'md');
-  setupPills('clip-length', clipLengths, () => state.clip, v => { state.clip = v; refresh(); }, 'sm');
+  setupPills('image-type', imageTypes, () => state.imageType, v => { state.imageType = v; refresh(); }, 'md', 'blue');
+  setupPills('video-type', videoTypes, () => state.videoType, v => { state.videoType = v; refresh(); }, 'md', 'purple');
+  setupPills('clip-length', clipLengths, () => state.clip, v => { state.clip = v; refresh(); }, 'sm', 'purple');
 
   setupSlider({ sliderId: 'images-slider', milestonesWrapId: 'images-milestones', valueLabelId: 'images-value', milestones: imageMilestones, stateKey: 'images' });
   setupSlider({ sliderId: 'videos-slider', milestonesWrapId: 'videos-milestones', valueLabelId: 'videos-value', milestones: videoMilestones, stateKey: 'videos' });
