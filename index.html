@@ -387,14 +387,8 @@
             </div>
           </summary>
           
-          <div class="p-5 sm:p-6 pt-0 border-t border-white/10">
-            <!-- Term Selector for Table to reduce clutter -->
-            <div class="flex justify-center my-4">
-              <div id="table-term-selector-wrap" class="inline-flex p-1 rounded-xl bg-neutral-950 border border-white/10 select-none">
-                <!-- populated by JS -->
-              </div>
-            </div>
-            <table id="comparison-table" class="w-full text-left text-xs mt-2">
+          <div class="p-5 sm:p-6 pt-0 border-t border-white/10 overflow-x-auto">
+            <table id="comparison-table" class="w-full text-left text-xs min-w-[620px] mt-4">
               <thead id="comparison-thead">
                 <tr id="comparison-thead-tr" class="border-b border-white/10 text-gray-400"></tr>
               </thead>
@@ -661,61 +655,30 @@
     { name: 'Response SLA', monthly: '1–2 Business Days', quarterly: '8–12 Hours', six_month: '6–8 Hours', yearly: '⚡ 3–4 Hours', mClass: 'text-gray-400', qClass: 'text-gray-300 font-medium', sClass: 'text-purple-300 font-medium', yClass: 'text-white font-bold' },
   ];
 
-  function renderTableTermSelector() {
-    const wrap = document.getElementById('table-term-selector-wrap');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    activeTerms.forEach(termId => {
-      const t = terms.find(x => x.id === termId);
-      if (!t) return;
-      const active = state.selectedTerm === termId;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = `px-5 py-2.5 rounded-lg text-xs font-bold transition-all active:scale-[0.97] cursor-pointer ${
-        active ? 'bg-[#6366f1] text-white shadow-md' : 'text-gray-400 hover:text-gray-200'
-      }`;
-      btn.textContent = t.label.replace(' Plan', '');
-      btn.addEventListener('click', () => {
-        state.selectedTerm = termId;
-        refresh();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
   function renderComparisonTable() {
-    renderTableTermSelector();
-
     const theadTr = document.getElementById('comparison-thead-tr');
     if (theadTr) {
-      const activeTerm = terms.find(x => x.id === state.selectedTerm);
-      const activeLabel = activeTerm ? activeTerm.label : '';
-      const badgeHtml = activeTerm && activeTerm.best
-        ? `<span class="inline-block bg-black border border-neutral-700 px-2.5 py-0.5 rounded-full ml-1.5 shadow-md align-middle"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span>`
-        : '';
-      
       theadTr.innerHTML = `
-        <th class="pb-3.5 font-semibold w-3/5 text-gray-300">Capabilities &amp; Support</th>
-        <th class="pb-3.5 font-semibold text-center w-2/5 text-white">${activeLabel} ${badgeHtml}</th>
+        <th class="pb-3.5 font-semibold w-1/3 text-gray-300">Capabilities &amp; Support</th>
+        ${activeTerms.includes('monthly') ? `<th class="pb-3.5 font-semibold text-center w-2/9">1 Month Plan</th>` : ''}
+        ${activeTerms.includes('quarterly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">3 Months Plan</th>` : ''}
+        ${activeTerms.includes('six_month') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-purple-400">6 Months Plan</th>` : ''}
+        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white">12 Months Plan <span class="inline-block bg-black border border-neutral-700 px-2.5 py-0.5 rounded-full ml-1.5 shadow-md align-middle"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span></th>` : ''}
       `;
     }
     const tbody = document.getElementById('comparison-tbody');
     if (!tbody) return;
     tbody.innerHTML = comparisonRows.map(row => {
       if (row.type === 'section') {
-        return `<tr class="bg-neutral-900/50"><td colspan="2" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">${row.title}</td></tr>`;
+        const colSpan = 1 + activeTerms.length;
+        return `<tr class="bg-neutral-900/50"><td colspan="${colSpan}" class="py-2.5 px-3 font-bold text-[11px] tracking-wider uppercase text-brand-400">${row.title}</td></tr>`;
       }
-
-      let val = '';
-      let textClass = '';
-      if (state.selectedTerm === 'monthly') { val = row.monthly; textClass = row.mClass || ''; }
-      else if (state.selectedTerm === 'quarterly') { val = row.quarterly; textClass = row.qClass || ''; }
-      else if (state.selectedTerm === 'six_month') { val = row.six_month; textClass = row.sClass || ''; }
-      else if (state.selectedTerm === 'yearly') { val = row.yearly; textClass = row.yClass || ''; }
-
       return `<tr class="hover:bg-white/[0.02] transition-colors">
         <td class="py-3 px-3 font-medium text-gray-200">${row.name}</td>
-        <td class="py-3 px-3 text-center ${textClass}">${val}</td>
+        ${activeTerms.includes('monthly') ? `<td class="py-3 px-3 text-center ${row.mClass || ''}">${row.monthly}</td>` : ''}
+        ${activeTerms.includes('quarterly') ? `<td class="py-3 px-3 text-center ${row.qClass || ''}">${row.quarterly}</td>` : ''}
+        ${activeTerms.includes('six_month') ? `<td class="py-3 px-3 text-center ${row.sClass || ''}">${row.six_month}</td>` : ''}
+        ${activeTerms.includes('yearly') ? `<td class="py-3 px-3 text-center ${row.yClass || ''}">${row.yearly}</td>` : ''}
       </tr>`;
     }).join('');
   }
