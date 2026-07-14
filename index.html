@@ -661,9 +661,9 @@
       theadTr.innerHTML = `
         <th class="pb-3.5 font-semibold w-1/3 text-gray-300">Capabilities &amp; Support</th>
         ${activeTerms.includes('monthly') ? `<th class="pb-3.5 font-semibold text-center w-2/9">1 Month Plan</th>` : ''}
-        ${activeTerms.includes('quarterly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">3 Months Plan</th>` : ''}
-        ${activeTerms.includes('six_month') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-purple-400">6 Months Plan</th>` : ''}
-        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white">12 Months Plan <span class="inline-block bg-black border border-neutral-700 px-2.5 py-0.5 rounded-full ml-1.5 shadow-md align-middle"><span class="text-[10px] font-extrabold uppercase tracking-wider gradient-text-best block">Best value</span></span></th>` : ''}
+        ${activeTerms.includes('quarterly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-brand-400">3 Months</th>` : ''}
+        ${activeTerms.includes('six_month') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-purple-400">6 Months</th>` : ''}
+        ${activeTerms.includes('yearly') ? `<th class="pb-3.5 font-semibold text-center w-2/9 text-white">12 Months</th>` : ''}
       `;
     }
     const tbody = document.getElementById('comparison-tbody');
