@@ -621,6 +621,36 @@
       </div>
 
       <div id="enterprise-plans-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"></div>
+
+      <!-- Enterprise Effective Pricing Calculator Section -->
+      <div class="mt-8 pt-6 border-t border-white/10">
+        <details class="group glass-soft rounded-2xl overflow-hidden transition-all duration-300 border border-surface-border">
+          <summary class="flex items-center justify-between p-5 cursor-pointer select-none bg-neutral-900/40 hover:bg-neutral-800/40 transition-colors">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-brand/15 border border-brand/25 text-brand-400 flex items-center justify-center shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+              </div>
+              <div class="text-left">
+                <h3 class="text-base font-bold text-gray-100 leading-tight">Enterprise Effective Pricing Calculator</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Determine actual per-unit costs with your Enterprise Deal discount applied</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 text-xs font-semibold text-gray-400 group-hover:text-gray-200 transition-colors">
+              <span class="group-open:hidden">Show calculator</span>
+              <span class="hidden group-open:inline">Hide calculator</span>
+              <div class="w-7 h-7 rounded-lg bg-neutral-800/60 border border-neutral-700/50 flex items-center justify-center text-gray-400 group-open:rotate-180 transition-transform duration-300">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </summary>
+          
+          <div class="p-5 pt-0 border-t border-white/10">
+            <div id="enterprise-effective-calc-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch mt-4">
+              <!-- Populated dynamically by JS -->
+            </div>
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 
@@ -754,10 +784,7 @@
     }).join('');
   }
 
-  function renderEffectiveCalculator() {
-    const grid = document.getElementById('effective-calc-grid');
-    if (!grid) return;
-
+  function buildCalculatorGridHtml(isEnterprise) {
     const it = imageTypes.find(x => x.id === state.imageType);
     const vt = videoTypes.find(x => x.id === state.videoType);
     const cl = clipLengths.find(x => x.id === state.clip);
@@ -765,7 +792,7 @@
 
     const D_free = cl.seconds;
 
-    grid.innerHTML = activeTerms.map(termId => {
+    return activeTerms.map(termId => {
       const t = terms.find(x => x.id === termId);
       if (!t) return '';
 
@@ -797,7 +824,7 @@
       const totalTermVideos = (state.videos * factor) + extraVideos;
 
       const rawTermTotal = base.total * factor;
-      const hasEnt = state.enterpriseDiscount > 0;
+      const hasEnt = isEnterprise && state.enterpriseDiscount > 0;
       const termTotal = hasEnt ? rawTermTotal * (1 - state.enterpriseDiscount) : rawTermTotal;
 
       const termImgCost = (base.imgBase + base.imgManaged) * factor;
@@ -908,6 +935,18 @@
         </div>
       `;
     }).join('');
+  }
+
+  function renderEffectiveCalculator() {
+    const regularGrid = document.getElementById('effective-calc-grid');
+    const enterpriseGrid = document.getElementById('enterprise-effective-calc-grid');
+    
+    if (regularGrid) {
+      regularGrid.innerHTML = buildCalculatorGridHtml(false);
+    }
+    if (enterpriseGrid) {
+      enterpriseGrid.innerHTML = buildCalculatorGridHtml(true);
+    }
   }
 
   async function fetchLiveRules() {
