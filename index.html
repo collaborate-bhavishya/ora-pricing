@@ -951,6 +951,7 @@
                 <div class="text-xs">
                   <span class="font-bold text-white">${state.images * factor}</span> base <span class="text-gray-300 font-medium">${it.label}</span> images
                   ${extraImages > 0 ? `<span class="text-emerald-400 font-bold"> + ${extraImages} extra</span>` : ''}
+                  ${state.imgManaged ? `<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[9px] font-bold tracking-wide select-none ml-1 shrink-0 align-middle">ORA Design Studio</span>` : ''}
                 </div>
                 <div class="text-right shrink-0">
                   <span class="block text-[10px] text-gray-500">Eff. Unit Price</span>
@@ -963,6 +964,7 @@
                 <div class="text-xs">
                   <span class="font-bold text-white">${state.videos * factor}</span> base <span class="text-gray-300 font-medium">${vt.label}</span> videos (${cl.label})
                   ${extraVideos > 0 ? `<span class="text-emerald-400 font-bold"> + ${extraVideos} extra (at ${D_free}s)</span>` : ''}
+                  ${state.vidManaged ? `<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[9px] font-bold tracking-wide select-none ml-1 shrink-0 align-middle">ORA Design Studio</span>` : ''}
                 </div>
                 <div class="text-right shrink-0">
                   <span class="block text-[10px] text-gray-500">Eff. Unit Price</span>
