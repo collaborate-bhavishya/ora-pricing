@@ -833,6 +833,14 @@
       const hasEnt = isEnterprise && state.enterpriseDiscount > 0;
       const termTotal = hasEnt ? rawTermTotal * (1 - state.enterpriseDiscount) : rawTermTotal;
 
+      const rawBaseTotal = (base.imgBase + base.vidBase) * factor;
+      const rawImgMgd = base.imgManaged * factor;
+      const rawVidMgd = base.vidManaged * factor;
+      const discountFactor = hasEnt ? (1 - state.enterpriseDiscount) : 1;
+      const baseTermPaid = rawBaseTotal * discountFactor;
+      const paidImgManaged = rawImgMgd * discountFactor;
+      const paidVidManaged = rawVidMgd * discountFactor;
+
       const termImgCost = (base.imgBase + base.imgManaged) * factor;
       const termVidCost = (base.vidBase + base.vidManaged) * factor;
       const termTotalCostCombined = termImgCost + termVidCost;
@@ -901,10 +909,36 @@
               <span class="text-[10px] font-extrabold text-gray-400">(${factor} mo)</span>
             </div>
 
-            <!-- Total Paid Amount -->
-            <div class="mt-3 flex items-baseline justify-between">
-              <span class="text-xs text-gray-500 font-semibold">Total Cost:</span>
-              <span class="text-base font-extrabold text-white">${money(termTotal)}</span>
+            <!-- Total Paid Amount with ORA Design Studio breakdowns -->
+            <div class="mt-3 space-y-1.5">
+              ${(state.imgManaged || state.vidManaged) ? `
+                <div class="flex items-center justify-between text-xs text-gray-400">
+                  <span>Base Credits Cost:</span>
+                  <span class="font-medium text-white">${money(baseTermPaid)}</span>
+                </div>
+                ${state.imgManaged ? `
+                  <div class="flex items-center justify-between text-xs text-gray-400">
+                    <span>ORA Design Studio (Images):</span>
+                    <span class="font-medium text-white">${money(paidImgManaged)}</span>
+                  </div>
+                ` : ''}
+                ${state.vidManaged ? `
+                  <div class="flex items-center justify-between text-xs text-gray-400">
+                    <span>ORA Design Studio (Videos):</span>
+                    <span class="font-medium text-white">${money(paidVidManaged)}</span>
+                  </div>
+                ` : ''}
+                <div class="h-px bg-white/5 my-1.5"></div>
+                <div class="flex items-baseline justify-between pt-0.5">
+                  <span class="text-xs text-gray-500 font-semibold">Total Cost:</span>
+                  <span class="text-base font-extrabold text-white">${money(termTotal)}</span>
+                </div>
+              ` : `
+                <div class="flex items-baseline justify-between">
+                  <span class="text-xs text-gray-500 font-semibold">Total Cost:</span>
+                  <span class="text-base font-extrabold text-white">${money(termTotal)}</span>
+                </div>
+              `}
             </div>
 
             <!-- Free Credit Justification -->
