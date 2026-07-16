@@ -769,6 +769,12 @@
     }
     const tbody = document.getElementById('comparison-tbody');
     if (!tbody) return;
+
+    const getCellClass = (val, isBold = false) => {
+      if (val === '—') return 'text-gray-500 text-center';
+      return `text-center text-white ${isBold ? 'font-bold' : 'font-medium'}`;
+    };
+
     tbody.innerHTML = comparisonRows.map(row => {
       if (row.type === 'section') {
         const colSpan = 1 + activeTerms.length;
@@ -776,10 +782,10 @@
       }
       return `<tr class="hover:bg-white/[0.02] transition-colors">
         <td class="py-3 px-3 font-medium text-gray-200">${row.name}</td>
-        ${activeTerms.includes('monthly') ? `<td class="py-3 px-3 text-center ${row.mClass || ''}">${row.monthly}</td>` : ''}
-        ${activeTerms.includes('quarterly') ? `<td class="py-3 px-3 text-center ${row.qClass || ''}">${row.quarterly}</td>` : ''}
-        ${activeTerms.includes('six_month') ? `<td class="py-3 px-3 text-center ${row.sClass || ''}">${row.six_month}</td>` : ''}
-        ${activeTerms.includes('yearly') ? `<td class="py-3 px-3 text-center ${row.yClass || ''}">${row.yearly}</td>` : ''}
+        ${activeTerms.includes('monthly') ? `<td class="py-3 px-3 text-center ${row.monthly === '—' ? 'text-gray-500' : 'text-gray-300'}">${row.monthly}</td>` : ''}
+        ${activeTerms.includes('quarterly') ? `<td class="py-3 px-3 ${getCellClass(row.quarterly, false)}">${row.quarterly}</td>` : ''}
+        ${activeTerms.includes('six_month') ? `<td class="py-3 px-3 ${getCellClass(row.six_month, false)}">${row.six_month}</td>` : ''}
+        ${activeTerms.includes('yearly') ? `<td class="py-3 px-3 ${getCellClass(row.yearly, true)}">${row.yearly}</td>` : ''}
       </tr>`;
     }).join('');
   }
