@@ -349,7 +349,7 @@
           <div class="pt-4 border-t border-neutral-800 space-y-4">
             <label class="flex items-center gap-2.5 cursor-pointer select-none">
               <input type="checkbox" id="vid-managed" class="ora-check" />
-              <span class="text-xs text-gray-300">ORA Design Studio Services <span class="text-gray-500">(+$4 / video)</span></span>
+              <span class="text-xs text-gray-300">ORA Design Studio Services <span class="text-gray-500">(+$3 / sec)</span></span>
             </label>
             <div class="pt-2">
               <div class="text-sm font-medium text-gray-400">Credits needed / month</div>
@@ -891,7 +891,7 @@
       }
 
       const regImgPrice = it.usdPerImage + (state.imgManaged ? MANAGED_IMAGE_ADDON : 0);
-      const regVidPrice = (vt.usdPerSec * cl.seconds) + (state.vidManaged ? MANAGED_VIDEO_ADDON : 0);
+      const regVidPrice = (vt.usdPerSec * cl.seconds) + (state.vidManaged ? cl.seconds * MANAGED_VIDEO_ADDON_PER_SEC : 0);
 
       const effImgDisplay = totalTermImages > 0 
         ? `<div class="flex items-baseline justify-end gap-1.5"><span class="text-[11px] text-gray-500 line-through">${money(regImgPrice)}</span><span class="text-lg font-black text-emerald-400">${money(effImagePrice)}</span></div>`
@@ -1223,9 +1223,9 @@
     omr: { symbol: 'OMR ', rate: 0.38, dp: 2 },
   };
 
-  // Managed service add-ons (sheet: managed = +$2/image, +$4/video)
+  // Managed service add-ons (sheet: managed = +$2/image, +$3/sec for video)
   const MANAGED_IMAGE_ADDON = 2;
-  const MANAGED_VIDEO_ADDON = 4;
+  const MANAGED_VIDEO_ADDON_PER_SEC = 3;
 
   let state = {
     imageType: '1k',
@@ -1258,7 +1258,7 @@
     const imgManaged = state.imgManaged ? state.images * MANAGED_IMAGE_ADDON : 0;
     const vidUnit = vt.usdPerSec * cl.seconds;          // cost per video
     const vidBase = state.videos * vidUnit * (1 - vidDisc);
-    const vidManaged = state.vidManaged ? state.videos * MANAGED_VIDEO_ADDON : 0;
+    const vidManaged = state.vidManaged ? state.videos * cl.seconds * MANAGED_VIDEO_ADDON_PER_SEC : 0;
     return {
       imgBase, imgManaged, vidBase, vidManaged, vidUnit, imgDisc, vidDisc,
       total: imgBase + imgManaged + vidBase + vidManaged,
