@@ -1719,11 +1719,11 @@
   // Managed-service checkboxes
   document.getElementById('img-managed').addEventListener('change', (e) => {
     state.imgManaged = e.target.checked;
-    renderPlans();
+    refresh();
   });
   document.getElementById('vid-managed').addEventListener('change', (e) => {
     state.vidManaged = e.target.checked;
-    renderPlans();
+    refresh();
   });
 
   // Show live plans from the start (0 images / 0 videos → $0).
@@ -1747,7 +1747,7 @@
   const openEnterpriseModal = () => {
     entModal.classList.remove('hidden');
     entModal.classList.add('flex');
-    renderPlans();
+    refresh();
     setTimeout(() => entCodeInput && entCodeInput.focus(), 50);
   };
   const closeEnterpriseModal = () => {
@@ -1757,7 +1757,7 @@
     state.enterpriseCode = '';
     if (entCodeInput) entCodeInput.value = '';
     if (entMsg) entMsg.innerHTML = '';
-    renderPlans();
+    refresh();
   };
 
   if (openEntBtn) openEntBtn.addEventListener('click', openEnterpriseModal);
@@ -1774,7 +1774,7 @@
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
       entMsg.innerHTML = '';
-      renderPlans();
+      refresh();
       return;
     }
 
@@ -1813,7 +1813,7 @@
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
       entMsg.innerHTML = '<span class="text-rose-400">Invalid Enterprise Deal Code.</span>';
-      renderPlans();
+      refresh();
       return;
     }
 
@@ -1821,14 +1821,14 @@
       state.enterpriseDiscount = 0;
       state.enterpriseCode = '';
       entMsg.innerHTML = `<span class="text-rose-400 font-bold">Not applicable</span>`;
-      renderPlans();
+      refresh();
       return;
     }
 
     state.enterpriseDiscount = Number(quote.discounts.couponPct) || 0;
     state.enterpriseCode = raw.toUpperCase();
     entMsg.innerHTML = `<span class="inline-flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-sm">✨ Enterprise Deal Code <b>${state.enterpriseCode}</b> Applied — ${Math.round(state.enterpriseDiscount * 100)}% VIP Enterprise Discount Unlocked!</span>`;
-    renderPlans();
+    refresh();
   };
 
   if (applyEntBtn) applyEntBtn.addEventListener('click', applyEnterpriseCode);
